@@ -13,7 +13,7 @@ vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_
 campanias = pd.read_csv("interbank-internacional-2019/ib_base_campanias/ib_base_campanias.csv")
 
 #
-# Target
+# Target Binary
 #
 
 y_train = train[['codmes', 'id_persona', 'margen']].copy()
@@ -92,3 +92,6 @@ for i, c in enumerate(non_ascii):
     X_train = X_train.drop(c, axis= 1)
     X_test["non_ascii_" + str(i)] = X_test[c]
     X_test = X_test.drop(c, axis= 1)
+
+X_train.to_csv(r'train_data_clean.csv')
+X_test.to_csv(r'test_data_clean.csv')
