@@ -124,6 +124,20 @@ print("")
 print("RCC")
 print(rcc.codmes.value_counts())
 
+#
+# Explore RCC
+#
 
+# ['codmes', 'id_persona', 'cod_banco', 'producto', 'clasif', 'mto_saldo', 'rango_mora']
+print(rcc.columns.tolist())
+print(rcc.loc[rcc['id_persona'] == 1])
+print(rcc.loc[rcc['id_persona'] == 2])
+print(rcc.loc[rcc['id_persona'] == 3])
+print(rcc.loc[rcc['id_persona'] == 4])
+print(rcc.loc[rcc['id_persona'] == 5])
 
+print(rcc.producto.unique())
+print(rcc.clasif.unique())
+print(rcc.mto_saldo.unique())
+print(rcc.rango_mora.unique())
 

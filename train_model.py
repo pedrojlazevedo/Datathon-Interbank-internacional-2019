@@ -1,6 +1,7 @@
 from lightgbm import LGBMClassifier # Light Gradient Boosting Machine (tree based)
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 X_train = pd.read_csv("train_data_clean.csv").set_index("prediction_id")
 X_test  = pd.read_csv("test_data_clean.csv").set_index("prediction_id")
@@ -10,6 +11,10 @@ y_train = train[['codmes', 'id_persona', 'margen']].copy()
 y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["codmes"].astype(str)
 y_train["target"] = (y_train["margen"] > 0).astype(int)
 y_train = y_train.set_index("prediction_id")
+
+plt.plot([1, 2, 3, 4], [1, 4, 9, 16], 'ro')
+plt.axis([0, 6, 0, 20])
+plt.show()
 
 drop_cols = ["codmes"]
 fi = []
@@ -25,8 +30,8 @@ for mes in X_train.codmes.unique():
     Xv = X_train[X_train.codmes == mes]
     yv = y_train.loc[Xv.index, "target"]
     
-    learner = LGBMClassifier(n_estimators=10000)
-    learner.fit(Xt, yt,  early_stopping_rounds=10, eval_metric="auc",
+    learner = LGBMClassifier(n_estimators=1000)
+    learner.fit(Xt, yt,  early_stopping_rounds=100, eval_metric="auc",
                 eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
     
     test_probs.append(pd.Series(learner.predict_proba(X_test.drop(drop_cols, axis=1))[:, -1],
@@ -34,6 +39,7 @@ for mes in X_train.codmes.unique():
     train_probs.append(pd.Series(learner.predict_proba(Xv.drop(drop_cols, axis=1))[:, -1],
                                 index=Xv.index, name="probs"))
     fi.append(pd.Series(learner.feature_importances_ / learner.feature_importances_.sum(), index=Xt.columns))
+    break
 
 test_probs = pd.concat(test_probs, axis=1).mean(axis=1)
 train_probs = pd.concat(train_probs)

@@ -11,6 +11,7 @@ sunat = pd.read_csv("interbank-internacional-2019/ib_base_sunat/ib_base_sunat.cs
 reniec = pd.read_csv("interbank-internacional-2019/ib_base_reniec/ib_base_reniec.csv")
 vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_vehicular.csv")
 campanias = pd.read_csv("interbank-internacional-2019/ib_base_campanias/ib_base_campanias.csv")
+rcc = pd.read_csv("rcc_new_3.csv")
 
 #
 # Target Binary
@@ -28,6 +29,7 @@ del train
 # id_persona
 #
 
+rcc = rcc.set_index("id_persona").astype("int32")
 sunat = sunat.groupby(["id_persona", "activ_econo"]).meses_alta.sum().unstack(level=1, fill_value=0).astype("int32")
 vehicular1 = vehicular.groupby(["id_persona", "marca"]).veh_var1.sum().unstack(level=1, fill_value=0).astype("float32")
 vehicular2 = vehicular.groupby(["id_persona", "marca"]).veh_var2.sum().unstack(level=1, fill_value=0).astype("float32")
@@ -37,8 +39,8 @@ del vehicular
 vehicular1.columns = [c + "_v1" for c in vehicular1.columns]
 vehicular2.columns = [c + "_v2" for c in vehicular2.columns]
 
-X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
-X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
+X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat).join(rcc)
+X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat).join(rcc)
 del vehicular1, vehicular2, reniec, sunat
 
 camp_canal = campanias.groupby(["codmes", "id_persona", "canal_asignado"]).size().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
