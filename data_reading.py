@@ -79,7 +79,7 @@ for id in ids:
         flag = False
         for index, row in lines.iterrows():
             month = int(row["codday"]/100)
-            if ((mes == 201901 and (month == 201809 or month == 201809 or month == 201810)) or
+            if ((mes == 201901 and (month == 201808 or month == 201809 or month == 201810)) or
                 (mes == 201902 and (month == 201809 or month == 201810 or month == 201811)) or
                 (mes == 201903 and (month == 201810 or month == 201811 or month == 201812)) or
                 (mes == 201904 and (month == 201811 or month == 201812 or month == 201901)) or
