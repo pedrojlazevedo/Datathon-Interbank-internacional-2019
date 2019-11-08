@@ -141,3 +141,9 @@ print(rcc.clasif.unique())
 print(rcc.mto_saldo.unique())
 print(rcc.rango_mora.unique())
 
+print("#####")
+print(campanias.producto.unique())
+
+print("#####")
+print(digital.codday.unique())
+
