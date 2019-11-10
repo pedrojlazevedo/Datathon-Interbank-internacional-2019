@@ -43,15 +43,27 @@ with open('campaign_treatment.csv', mode='w', newline='') as csv_file:
     campaigns = np.insert(campaigns,1,'canal_asignado')
     csv_f.writerow(campaigns)'''
     ## counts
-    test = base_camp.head(10000)
+    test = base_camp
+    newDF = pd.DataFrame()
+    aux=0
     for campaign in campaigns:
-        campaign_name=str(campaign)
-        finalCountByMonth = test.groupby(["id_persona","codmes"])['producto'].apply(lambda c: c[c == campaign_name].count())
+        campaign_name_aux=str(campaign)
+        campaign_name=campaign_name_aux.replace(" ", "")+str('Count')
+        #finalCountByMonth = test.groupby(["id_persona","codmes"])['producto'].apply(lambda c: c[c == campaign_name].count())
         ## adding new metrics
-        #totalCount = test.groupby(["id_persona"])['producto'].apply(lambda c: c[c == campaign_name].max())
+        #lambda c: c[c == campaign_name].count()
+        totalCount = test.groupby(["id_persona"])['producto'] \
+        .apply(lambda c: c[c == campaign].count()) \
+        .reset_index(name=campaign_name)
         #avgTotalCount = test.groupby(["id_persona"])['producto'].apply(lambda c: c[c == campaign_name].mean()) todo:mean,max,min,std_dev
         ## merging metrics -> find out to do a full outer join (not losing codmes when relevant)
         #result = pd.merge(finalCountByMonth, totalCount, on='id_persona', how='outer')
-        path = r'C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\data_generation'
-        camp_file = campaign_name +str('.csv')
-        finalCountByMonth.reset_index().to_csv(os.path.join(path,camp_file))
+        ## renaming column headers
+        if aux==0:
+            newDF=totalCount
+        else:
+            newDF = pd.merge(newDF, totalCount, on='id_persona', how='outer')
+        aux=aux+1
+    path = r'C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\data_generation'
+    camp_file = str('countCampaigns.csv')
+    newDF.to_csv(os.path.join(path,camp_file),index=False)
