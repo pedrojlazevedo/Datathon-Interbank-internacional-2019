@@ -1,4 +1,5 @@
 from lightgbm import LGBMClassifier # Light Gradient Boosting Machine (tree based)
+from lightgbm import LGBMRegressor
 
 import pandas as pd
 
@@ -17,6 +18,7 @@ fi = []
 test_probs = []
 train_probs = []
 
+ #LGBMClassifier!!! Probably not the best
 aux = 1
 for mes in X_train.codmes.unique():
     print("*"*10, mes, "*"*10)
@@ -39,7 +41,35 @@ for mes in X_train.codmes.unique():
     if aux == 2:
         break
     aux += 1
+'''
+import gc
 
+aux = 1
+for mes in X_train.codmes.unique():
+    if aux < 4:
+        aux += 1
+        continue
+    print("*"*10, mes, "*"*10)
+    Xt = X_train[X_train.codmes != mes]
+    yt = y_train.loc[Xt.index, "target"]
+    Xt = Xt.drop(drop_cols, axis=1)
+
+    Xv = X_train[X_train.codmes == mes]
+    yv = y_train.loc[Xv.index, "target"]
+    
+    learner = LGBMRegressor(n_estimators=10000)
+    learner.fit(Xt, yt,  early_stopping_rounds=100, eval_metric="auc",
+                eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
+    gc.collect()
+    test_probs.append(pd.Series(learner.predict(X_test.drop(drop_cols, axis=1)),
+                                index=X_test.index, name="fold_" + str(mes)))
+    train_probs.append(pd.Series(learner.predict(Xv.drop(drop_cols, axis=1)),
+                                index=Xv.index, name="probs"))
+    fi.append(pd.Series(learner.feature_importances_ / learner.feature_importances_.sum(), index=Xt.columns))
+    gc.collect()
+
+    aux += 1
+'''
 test_probs = pd.concat(test_probs, axis=1).mean(axis=1)
 train_probs = pd.concat(train_probs)
 fi = pd.concat(fi, axis=1).mean(axis=1)
@@ -63,4 +93,4 @@ print(optimization)
 test_preds = (test_probs > optimization["x"][0]).astype(int)
 test_preds.index.name="prediction_id"
 test_preds.name="class"
-test_preds.to_csv("results_LGBM.csv", header=True)
+test_preds.to_csv("results_LGBM_Regressor.csv", header=True)
