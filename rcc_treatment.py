@@ -19,7 +19,7 @@ rcc = pd.read_csv(r"C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-inte
 ## unique keys
 ids         = rcc.id_persona.unique()
 products = rcc.producto.unique()
-test = rcc.head(200)
+test = rcc
 aux=0
 print(test)
 print(products)
