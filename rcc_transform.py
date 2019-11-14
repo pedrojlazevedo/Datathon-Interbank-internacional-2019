@@ -1,94 +1,57 @@
 import pandas as pd
-import numpy as np
 import csv
-import statistics 
 
-#
-# Working with RCC table
-# Search IDS and save to only one entry
-#
-with open('rcc_new.csv', mode='w', newline='') as csv_file:
+campanias = pd.read_csv(r"interbank-internacional-2019\data_generation\rcc_new.csv")
+
+meses = {
+    201901: slice(201808, 201810),
+    201902: slice(201809, 201811),
+    201903: slice(201810, 201812),
+    201904: slice(201811, 201901),
+    201905: slice(201812, 201902),
+    201906: slice(201901, 201903),
+    201907: slice(201902, 201904)
+}
+
+complementos = []
+ids          = campanias.id_persona.unique()
+cols = campanias.columns
+aux = 1
+print(len(ids))
+with open('rcc_final.csv', mode='w', newline='') as csv_file:
     csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-    # ['codmes', 'id_persona', 'cod_banco', 'producto', 'clasif', 'mto_saldo', 'rango_mora']
-    rcc = pd.read_csv("interbank-internacional-2019/ib_base_rcc/ib_base_rcc.csv", parse_dates=["codmes"])
-    rcc['codmes'] =  pd.to_datetime(rcc['codmes'], format='%Y%m')
-
-    ids         = rcc.id_persona.unique()
-    productos   = rcc.producto.unique()
-    columns = productos.copy()
-
-    columns  = np.insert(columns, 0, 'id_persona')
-    columns  = np.insert(columns, 1, 'variation_linea')
-    columns  = np.insert(columns, 1, 'variation_saldo')
-    columns  = np.insert(columns, 1, 'avg_linea')
-    columns  = np.insert(columns, 1, 'avg_saldo')
-    columns  = np.insert(columns, 1, 'variance_linea')
-    columns  = np.insert(columns, 1, 'variance_saldo')
-    columns  = np.insert(columns, 1, 'high_linea')
-    columns  = np.insert(columns, 1, 'low_linea')
-    columns  = np.insert(columns, 1, 'high_saldo')
-    columns  = np.insert(columns, 1, 'low_saldo')
-
-    csv_writer.writerow(columns)
-
-    aux = 0
-    print(len(ids))
+    csv_writer.writerow(cols)
     for id in ids:
-        lines = rcc.loc[rcc['id_persona'] == id]
-        new_rcc = {}
-        new_rcc['id_persona'] = id
+        for mes in meses:
+            res = {}
+            res["id_persona"] = id        
+            lines = campanias.loc[campanias['id_persona'] == id]
+            res["codmes"] = mes
+            flag = False
 
-        lines.sort_values(by=['codmes'])
-        low_saldo   = 0
-        high_saldo  = 0
-        low_linea   = 0
-        high_linea  = 0
-        all_linea   = []
-        all_saldo   = []
-        for index, row in lines.iterrows():
-            saldo = row['mto_saldo']
-            if 'LINEA TOTAL' in row['producto']:            
-                if high_linea == 0:
-                    high_linea = saldo
-                    low_linea = saldo
-                all_linea.append(saldo)
-                if saldo > high_linea:
-                    high_linea = saldo
-                elif saldo < low_linea:
-                    low_linea = saldo
-            else:
-                if low_saldo == 0:
-                    low_saldo = saldo
-                    high_saldo = saldo
-                all_saldo.append(saldo)
-                if saldo > high_saldo:
-                    high_saldo = saldo
-                elif saldo < low_saldo:
-                    low_saldo = saldo   
+            for col in cols:
+                if col == "id_persona" or col == "codmes":
+                    continue
+                res[col] = 0
 
-        new_rcc['low_saldo'] = low_saldo
-        new_rcc['high_saldo'] = high_saldo
-        new_rcc['low_linea'] = low_linea
-        new_rcc['high_linea'] = high_linea        
-        if len(all_saldo) > 2 and len(all_linea) > 2:
-            new_rcc['variance_saldo'] = statistics.variance(all_saldo)
-            new_rcc['variance_linea'] = statistics.variance(all_linea)
-            new_rcc['avg_saldo'] = statistics.mean(all_saldo)
-            new_rcc['avg_linea'] = statistics.mean(all_linea)
-            new_rcc['variation_saldo'] = all_saldo[len(all_saldo)-1] - all_saldo[0]
-            new_rcc['variation_linea'] = all_linea[len(all_linea)-1] - all_linea[0]
-        count_productos = lines.producto.value_counts()
-        name_productos = count_productos.keys()
-
-        for producto in productos:
-            if producto in name_productos:
-                new_rcc[producto] = count_productos[producto]
-            else:
-                new_rcc[producto] = 0
-
-        csv_writer.writerow(new_rcc.values())
-        
+            for index, row in lines.iterrows():
+                month = row["codmes"]
+                if ((mes == 201901 and (month == 201808 or month == 201809 or month == 201810)) or
+                (mes == 201902 and (month == 201809 or month == 201810 or month == 201811)) or
+                (mes == 201903 and (month == 201810 or month == 201811 or month == 201812)) or
+                (mes == 201904 and (month == 201811 or month == 201812 or month == 201901)) or
+                (mes == 201905 and (month == 201812 or month == 201901 or month == 201902)) or
+                (mes == 201906 and (month == 201901 or month == 201902 or month == 201903)) or
+                (mes == 201907 and (month == 201902 or month == 201903 or month == 201904))                
+                ):
+                    flag = True
+                    for col in cols:
+                        if col == "id_persona" or col == "codmes":
+                            continue
+                        res[col] += row[col]
+            #print(res)
+            if flag:
+                csv_writer.writerow(res.values())
         if aux%1000 == 0:
-            print("Mais mil! Num:" + str(aux))
+            print("Mil Done" + str(aux))
         aux += 1
