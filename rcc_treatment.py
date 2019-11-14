@@ -21,6 +21,9 @@ ids         = rcc.id_persona.unique()
 products = rcc.producto.unique()
 test = rcc.head(200)
 aux=0
+print(test)
+print(products)
+print(len(products))
 d = {'mto_saldo': ['mean','sum'], 'clasif': ['mean','min','max'], 'rango_mora': ['mean','min','max']} 
 for product in products:
     product_name_aux=str(product)
@@ -30,10 +33,12 @@ for product in products:
     .apply(lambda x: x[x['producto']==product]) \
     .reset_index()
     finalCount = totalCount.groupby(["id_persona","codmes"]).agg(d)
-    print(finalCount)
-    path = r'C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\data_generation\rcc'
-    camp_file = product_name + str('.csv')
-    final_path = path+camp_file
-    with open(final_path, 'w') as f:
-        f.write('\n'.join([','.join(h) for h in zip(*finalCount.columns)]) + '\n')
-        finalCount.to_csv(final_path, mode='a', index=True, header=False)
+    finalDF = pd.DataFrame(finalCount)
+    auxDf = []
+    for col in finalDF.columns:
+        data = finalDF[col].apply(pd.Series)
+        data = auxDf.append(data)
+    auxDf = pd.concat(auxDf,axis=1)
+    path = r'C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\data_generation'
+    rcc_file = str('rcc') + product_name + str('.csv')
+    auxDf.to_csv(os.path.join(path,rcc_file),index=True)
