@@ -19,9 +19,7 @@ with open('rcc_treatment.csv', mode='w', newline='') as csv_file:
     ## unique keys
     ids         = rcc.id_persona.unique()
     products = rcc.producto.unique()
-    test = rcc.head(200)
-    
-    '''print(test)'''
+    test = rcc
     newDF = pd.DataFrame()
     aux=0
     d = {'mto_saldo': ['mean','sum'], 'clasif': ['mean','min','max'], 'rango_mora': ['mean','min','max']} 
@@ -33,7 +31,6 @@ with open('rcc_treatment.csv', mode='w', newline='') as csv_file:
         .apply(lambda x: x[x['producto']==product]) \
         .reset_index()
         finalCount = totalCount.groupby(["id_persona","codmes"]).agg(d)
-        'finalCount = totalCount.agg(d)'
         print(finalCount)
         if aux==0:
             newDF=totalCount
