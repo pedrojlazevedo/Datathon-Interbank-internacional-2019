@@ -21,6 +21,7 @@ ids         = digital.id_persona.unique()
 test = digital
 aux=0
 # Data Analysis - Has any values different then 0
+'''
 print((test['time_tc']!=0).sum())
 print((test['time_ctasld']!=0).sum())
 print((test['time_mllp']!=0).sum())
@@ -28,8 +29,10 @@ print((test['time_mllst']!=0).sum())
 print((test['busqmc']!=0).sum())
 print((test['busqamex']!=0).sum())
 print(len(test.columns))
+'''
 # Dropping columns containing only zeroes
 digAnalyzed = test.drop(['time_tc','time_ctasld','time_mllp','time_mllst','busqmc','busqamex'],axis=1) 
+'''
 # Confirming all columns have atleast 1 relevant result
 print(len(digAnalyzed.columns))
 for cols in digAnalyzed.columns:
@@ -37,8 +40,9 @@ for cols in digAnalyzed.columns:
 # Converting codday to codmes and renaming it
 digAnalyzed["codday"] = digAnalyzed["codday"].apply(lambda x : int(x/100))
 finalDigital = digAnalyzed.rename(columns={"codday":"codmes"})
+'''
 # Calculating mean min max for every column
-totalCount = finalDigital.groupby(['id_persona','codmes']).aggregate(['mean','min','max'])
+totalCount = digAnalyzed.groupby(['id_persona','codmes']).aggregate(['mean','min','max','sum'])
 path = "interbank-internacional-2019\data_generation"
 digital_file = str('digital_final.csv')
 # Converting multi level header to single level

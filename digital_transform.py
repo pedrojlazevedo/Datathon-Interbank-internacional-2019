@@ -32,7 +32,7 @@ def mapMonth(n):
         meses.append(201907)
     return meses
 
-test = digital.head(2).copy()
+test = digital.head(100).copy()
 # Apply transformation
 
 test["codday"] = test["codday"].apply(lambda x : int(x/100))
