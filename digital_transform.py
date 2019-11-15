@@ -30,7 +30,7 @@ def mapMonth(n):
 print(digital["codmes"].min())
 print(digital["codmes"].max())
 complementos = []
-test = digital.head(200)
+test = digital
 test['codmes'] = test['codmes'].apply(lambda x: mapMonth(x))
 print(test)
 
