@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 digital = pd.read_csv("interbank-internacional-2019/data_generation/digital_new.csv")
 
 mesesDigital = {
@@ -34,9 +35,9 @@ test = digital
 # Apply transformation
 test['codmes'] = test['codmes'].apply(lambda x: mapMonth(x))
 
-
-print(test)
-
+path = r'C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\data_generation'
+rcc_file = str('digital_final.csv')
+test.to_csv(os.path.join(path,rcc_file),index=False)
 '''for mes in mesesDigital:
     res = {}
     res["codmes"] = mes
