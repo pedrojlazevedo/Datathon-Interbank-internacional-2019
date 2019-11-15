@@ -31,7 +31,10 @@ print(digital["codmes"].min())
 print(digital["codmes"].max())
 complementos = []
 test = digital
+# Apply transformation
 test['codmes'] = test['codmes'].apply(lambda x: mapMonth(x))
+
+
 print(test)
 
 '''for mes in mesesDigital:
