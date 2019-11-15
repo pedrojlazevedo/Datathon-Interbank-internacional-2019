@@ -15,7 +15,7 @@ def diff(first, second):
 
 
 
-digital = pd.read_csv(r"C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\ib_base_digital\ib_base_digital.csv")
+digital = pd.read_csv("interbank-internacional-2019/data_generation/digital_transform.csv")
 ## unique keys
 ids         = digital.id_persona.unique()
 test = digital
@@ -39,8 +39,8 @@ digAnalyzed["codday"] = digAnalyzed["codday"].apply(lambda x : int(x/100))
 finalDigital = digAnalyzed.rename(columns={"codday":"codmes"})
 # Calculating mean min max for every column
 totalCount = finalDigital.groupby(['id_persona','codmes']).aggregate(['mean','min','max'])
-path = r'C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\data_generation'
-digital_file = str('digital_new.csv')
+path = "interbank-internacional-2019\data_generation"
+digital_file = str('digital_final.csv')
 # Converting multi level header to single level
 totalCount.columns = [' '.join(col).strip() for col in totalCount.columns.values]
 totalCount.to_csv(os.path.join(path,digital_file),index=True)

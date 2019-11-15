@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
-digital = pd.read_csv("interbank-internacional-2019/data_generation/digital_new.csv")
+digital = pd.read_csv("interbank-internacional-2019/ib_base_digital/ib_base_digital.csv")
 
 mesesDigital = {
     201901: slice(201811, 201901),
@@ -15,56 +15,37 @@ mesesDigital = {
 
 # Return month mapped to final 
 def mapMonth(n): 
-    if n>=201811 and n<201901:
-        return 201902
-    elif n>=201812 and n<201902:
-        return 201903
-    elif n>=201901 and n<201903:
-        return 201904
-    elif n>=201902 and n<201904:
-        return 201905
-    elif n>201903 and n<=201904:
-        return 201906
-    else:
-        return 201907
+    meses = []
+    if n == 201811 or n == 201812:
+        meses.append(201901)
+    if n == 201811 or n == 201812 or n == 201901:
+        meses.append(201902)
+    if n == 201811 or n == 201901 or n == 201902:
+        meses.append(201903)
+    if n == 201901 or n == 201902 or n == 201903:
+        meses.append(201904)
+    if n == 201902 or n == 201903 or n == 201904:
+        meses.append(201905)
+    if n == 201903 or n == 201904:
+        meses.append(201906)
+    if n == 201904:
+        meses.append(201907)
+    return meses
 
-print(digital["codmes"].min())
-print(digital["codmes"].max())
-complementos = []
-test = digital
+test = digital.head(2).copy()
 # Apply transformation
-test['codmes'] = test['codmes'].apply(lambda x: mapMonth(x))
 
-path = r'C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\data_generation'
-rcc_file = str('digital_final.csv')
-test.to_csv(os.path.join(path,rcc_file),index=False)
-'''for mes in mesesDigital:
-    res = {}
-    res["codmes"] = mes
-    flag = False
-    for index, row in digital.iterrows():
-        month = row["codmes"]
-        if ((mes == 201901 and (month == 201808 or month == 201809 or month == 201810)) or
-            (mes == 201902 and (month == 201809 or month == 201810 or month == 201811)) or
-            (mes == 201903 and (month == 201810 or month == 201811 or month == 201812)) or
-            (mes == 201904 and (month == 201811 or month == 201812 or month == 201901)) or
-            (mes == 201905 and (month == 201812 or month == 201901 or month == 201902)) or
-            (mes == 201906 and (month == 201901 or month == 201902 or month == 201903)) or
-            (mes == 201907 and (month == 201902 or month == 201903 or month == 201904))                
-            ):
-            flag = True
-            print(res["codmes"])
-    if flag:
-        df = pd.DataFrame([res])
-        print(df)
-        complementos.append(df)
-if aux%1000 == 0:
-    print("Mil Done" + str(aux))
-aux += 1
-print("contatenando complementos")
-print(complementos)
-complementos = pd.concat(complementos).reset_index().set_index(["id_persona", "codmes"]).astype("float32")
-print(complementos)
+test["codday"] = test["codday"].apply(lambda x : int(x/100))
+test = test.rename(columns={"codday":"codmes"})
+df_to_save = test.head(0).copy()
+for index, row in test.iterrows():
+    meses = mapMonth(row["codmes"])
+    for mes in meses:
+        row["codmes"] = mes
+        df_to_save = df_to_save.append(row, ignore_index=True)
 
-complementos.to_csv(r"digital_new.csv")
-'''
+df_to_save = df_to_save.set_index(['codmes'])
+df_to_save.index = df_to_save.index.map(int)
+df_to_save = df_to_save.reset_index().set_index(['id_persona'])
+df_to_save.index = df_to_save.index.map(int)
+df_to_save.to_csv("interbank-internacional-2019/data_generation/digital_transform.csv",index=True)
