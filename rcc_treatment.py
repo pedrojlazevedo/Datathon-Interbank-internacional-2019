@@ -15,12 +15,13 @@ def diff(first, second):
 
 print(pd.__version__)
 
-rcc = pd.read_csv(r"C:\Users\USER\Desktop\datathon-pedro\Datathon\interbank-internacional-2019\ib_base_rcc\ib_base_rcc.csv")
+rcc = pd.read_csv("interbank-internacional-2019\ib_base_rcc\ib_base_rcc.csv")
 ## unique keys
 ids         = rcc.id_persona.unique()
 products = rcc.producto.unique()
 test = rcc
 aux=0
+print(test["codmes"].max())
 print(test)
 print(products)
 print(len(products))

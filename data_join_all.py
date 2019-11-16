@@ -12,21 +12,24 @@ sunat = pd.read_csv("interbank-internacional-2019/ib_base_sunat/ib_base_sunat.cs
 reniec = pd.read_csv("interbank-internacional-2019/ib_base_reniec/ib_base_reniec.csv")
 vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_vehicular.csv")
 
-campanias = pd.read_csv("campanias_final.csv")
-digital = pd.read_csv("digital_new_3.csv")
-rcc = pd.read_csv("rcc_new_3.csv")
+campanias = pd.read_csv("interbank-internacional-2019/data_generation/campanias_final.csv", encoding='latin-1')
+digital = pd.read_csv("interbank-internacional-2019/data_generation/digital_new_3.csv", encoding='latin-1')
+rcc = pd.read_csv("interbank-internacional-2019/data_generation/rcc_new_3.csv", encoding='latin-1')
 
 #
 # Target Binary
 #
 
-y_train = train[['codmes', 'id_persona', 'margen', 'codtarget']].copy()
+y_train = train[['codmes', 'id_persona', 'margen']].copy()
 y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["codmes"].astype(str)
-y_train["target"] = (y_train["margen"] > 0).astype(int)
+# y_train["target"] = (y_train["margen"] > 0).astype(int)
 y_train = y_train.set_index("prediction_id")
 X_train = train.drop(["margen"], axis=1)
 X_train["prediction_id"] = X_train["id_persona"].astype(str) + "_" + X_train["codmes"].astype(str)
 del train
+
+X_train["ratio"] = X_train["linea_ofrecida"] / X_train["ingreso_neto"]
+X_test["ratio"] = X_test["linea_ofrecida"] / X_test["ingreso_neto"]
 
 #
 # id_persona
@@ -102,5 +105,5 @@ for i, c in enumerate(non_ascii):
     X_test["non_ascii_" + str(i)] = X_test[c]
     X_test = X_test.drop(c, axis= 1)
 
-X_train.to_csv(r'train_data_clean.csv')
-X_test.to_csv(r'test_data_clean.csv')
+X_train.to_csv(r'interbank-internacional-2019/data_generation/train_data_clean.csv')
+X_test.to_csv(r'interbank-internacional-2019/data_generation/test_data_clean.csv')
