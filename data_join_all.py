@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import gc
 ################
 # DATA READING #
 ################
@@ -13,8 +13,10 @@ reniec = pd.read_csv("interbank-internacional-2019/ib_base_reniec/ib_base_reniec
 vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_vehicular.csv")
 
 campanias = pd.read_csv("interbank-internacional-2019/data_generation/campanias_final.csv", encoding='latin-1')
-digital = pd.read_csv("interbank-internacional-2019/data_generation/digital_new_3.csv", encoding='latin-1')
-rcc = pd.read_csv("interbank-internacional-2019/data_generation/rcc_new_3.csv", encoding='latin-1')
+digital = pd.read_csv("interbank-internacional-2019/data_generation/digital_final.csv", encoding='latin-1')
+gc.collect()
+rcc = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv", encoding='latin-1')
+gc.collect()
 
 #
 # Target Binary
@@ -52,7 +54,7 @@ del vehicular1, vehicular2, reniec, sunat
 #
 # Digital
 #
-import gc
+
 
 meses = {
     201901: slice(201808, 201810),

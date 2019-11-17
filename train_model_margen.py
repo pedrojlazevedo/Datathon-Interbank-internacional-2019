@@ -32,7 +32,7 @@ for mes in X_train.codmes.unique():
     yv = y_train.loc[Xv.index, "target"]
     
     learner = LGBMRegressor(n_estimators=1000)
-    learner.fit(Xt, yt,  early_stopping_rounds=10, eval_metric="auc",
+    learner.fit(Xt, yt,  early_stopping_rounds=10, eval_metric="mae",
                 eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
     gc.collect()
     test_preds.append(pd.Series(learner.predict(X_test.drop(drop_cols, axis=1)),
