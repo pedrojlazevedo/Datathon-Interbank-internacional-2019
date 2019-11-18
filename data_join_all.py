@@ -54,13 +54,13 @@ del vehicular1, vehicular2, reniec, sunat
 
 
 meses = {
-    201901: slice(201808, 201810),
-    201902: slice(201809, 201811),
-    201903: slice(201810, 201812),
-    201904: slice(201811, 201901),
-    201905: slice(201812, 201902),
-    201906: slice(201901, 201903),
-    201907: slice(201902, 201904)
+    201901: slice(201800, 201904),
+    201902: slice(201800, 201904),
+    201903: slice(201800, 201904),
+    201904: slice(201800, 201904),
+    201905: slice(201800, 201904),
+    201906: slice(201800, 201904),
+    201907: slice(201800, 201904)
 }
 
 digital = digital.reset_index().set_index(["id_persona", "codmes"]).astype("float32")
@@ -79,13 +79,32 @@ gc.collect()
 #
 # RCC
 #
+complementos = []
+for mes in meses.keys():
+    print("*"*10, mes, "*"*10)
+    res = pd.concat([
+        rcc.loc[meses[mes]].groupby("id_persona").sum()        
+    ], axis=1)
+    res["codmes"] = mes
+    res = res.reset_index().set_index(["id_persona", "codmes"]).astype("float32")
+    complementos.append(res)
+
+del rcc
+
+gc.collect()
+print("concatenando complementos")
+complementos = pd.concat(complementos)
+gc.collect()
 
 print("X_train join RCC")
-X_train = X_train.reset_index().merge(rcc, on=["id_persona", "codmes"], how="left").set_index("prediction_id")
+X_train = X_train.reset_index().join(complementos, on=["id_persona", "codmes"]).set_index("prediction_id")
 gc.collect()
 
 print("X_test joing RCC")
-X_test = X_test.reset_index().merge(rcc, on=["id_persona", "codmes"], how="left").set_index("prediction_id")
+X_test = X_test.reset_index().join(complementos, on=["id_persona", "codmes"]).set_index("prediction_id")
+
+del complementos, res
+gc.collect()
 
 #
 # Campanias
