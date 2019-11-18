@@ -4,10 +4,10 @@ from lightgbm import LGBMRegressor
 import pandas as pd
 import gc
 
-X_train = pd.read_csv("train_data_clean.csv").set_index("prediction_id")
+X_train = pd.read_csv("interbank-internacional-2019/data_generation/train_data_clean.csv").set_index("prediction_id")
 X_train = X_train.drop(['codtarget'], axis=1)
 
-X_test  = pd.read_csv("test_data_clean.csv").set_index("prediction_id")
+X_test  = pd.read_csv("interbank-internacional-2019/data_generation/test_data_clean.csv").set_index("prediction_id")
 train = pd.read_csv("interbank-internacional-2019/ib_base_inicial_train/ib_base_inicial_train.csv")
 
 y_train = train[['codmes', 'id_persona', 'margen']].copy()
@@ -31,8 +31,8 @@ for mes in X_train.codmes.unique():
     Xv = X_train[X_train.codmes == mes]
     yv = y_train.loc[Xv.index, "target"]
     
-    learner = LGBMRegressor(n_estimators=1000)
-    learner.fit(Xt, yt,  early_stopping_rounds=10, eval_metric="mae",
+    learner = LGBMRegressor(n_estimators=5000)
+    learner.fit(Xt, yt,  early_stopping_rounds=50, eval_metric="mae",
                 eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
     gc.collect()
     test_preds.append(pd.Series(learner.predict(X_test.drop(drop_cols, axis=1)),
@@ -58,8 +58,8 @@ for mes in X_train.codmes.unique():
     Xv = X_train[X_train.codmes == mes]
     yv = y_train.loc[Xv.index, "target"]
     
-    learner = LGBMClassifier(n_estimators=1000)
-    learner.fit(Xt, yt,  early_stopping_rounds=10, eval_metric="auc",
+    learner = LGBMClassifier(n_estimators=5000)
+    learner.fit(Xt, yt,  early_stopping_rounds=50, eval_metric="auc",
                 eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
     gc.collect()
     test_probs.append(pd.Series(learner.predict_proba(X_test.drop(drop_cols, axis=1))[:, -1],
