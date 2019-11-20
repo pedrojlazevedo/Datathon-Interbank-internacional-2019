@@ -28,8 +28,17 @@ def rango_strong(series):
             count += 1
     return count
 
-# Working with Campanhas table
+def count_baks(series):
+    cod_banks = []
+    for index, value in series.items():
+        if value in cod_banks:
+            continue
+        else:
+            cod_banks.append(value)
+    return len(cod_banks)
 
+# Working with Campanhas table
+path = r'interbank-internacional-2019\data_generation'
 rcc = pd.read_csv("interbank-internacional-2019\ib_base_rcc\ib_base_rcc.csv")
 ## unique keys
 ids         = rcc.id_persona.unique()
@@ -43,17 +52,20 @@ rcc.clasif.fillna(value=-1,inplace=True)
 rcc.rango_mora.fillna(value=-1,inplace=True)
 
 # TODO:Trying to create new arrays with count of rango_mora! 
-rcc = rcc.sort_values(by=['rango_mora', 'id_persona'], ascending=False)
+'''
+rcc = rcc.sort_values(by=['id_persona', 'rango_mora'], ascending=False)
 rcc = rcc.head(100)
+rcc_file = str('rcc_historia_persona_pre.csv')
+rcc.to_csv(os.path.join(path,rcc_file))
+'''
 
 # Aggregating by metrics for each [[id_persona,codmes],[bank]] -> for every product
-d = {"cod_banco": ['count'],'mto_saldo': ['mean','sum'], 'clasif': ['mean','min','max'], \
+d = {"cod_banco": [count_baks],'mto_saldo': ['mean','sum'], 'clasif': ['mean','min','max'], \
     'rango_mora': ['mean','min','max', rango_weak, rango_medium, rango_strong]} 
-rcc_banco = rcc.groupby(["codmes", "id_persona", "producto"]).agg(d) \
-    .unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_banco = rcc.drop(['codmes'], axis=1).groupby(["id_persona", "producto"]).agg(d) \
+    .unstack(level=1, fill_value=0).reset_index().set_index("id_persona").sort_index().astype("int32")
 
 rcc_banco.columns = [' '.join(col).strip() for col in rcc_banco.columns.values]
 
-path = r'interbank-internacional-2019\data_generation'
 rcc_file = str('rcc_historia_persona.csv')
 rcc_banco.to_csv(os.path.join(path,rcc_file))
