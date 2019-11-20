@@ -102,7 +102,7 @@ gc.collect()
 del rcc_clasif, rcc_mora, rcc_producto, rcc_banco, camp_canal, camp_prod, digital, complementos,res
 gc.collect()
 
-rcc = pd.read_csv("data_generation/rcc_historia_persona.csv")
+rcc = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv")
 gc.collect()
 rcc.set_index("id_persona").astype("float32")
 X_train = X_train.reset_index().set_index("id_persona").join(rcc)
