@@ -107,7 +107,8 @@ gc.collect()
 rcc.set_index("id_persona").astype("float32")
 X_train = X_train.reset_index().set_index("id_persona").join(rcc)
 X_test = X_test.reset_index().set_index("id_persona").join(rcc)
-
+del rcc
+gc.collect()
 
 for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in X_train.columns]]):
     X_train["non_ascii_" + str(i)] = X_train[c]
