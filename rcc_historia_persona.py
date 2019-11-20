@@ -38,8 +38,8 @@ def count_baks(series):
     return len(cod_banks)
 
 # Working with Campanhas table
-path = r'interbank-internacional-2019\data_generation'
-rcc = pd.read_csv("interbank-internacional-2019\ib_base_rcc\ib_base_rcc.csv")
+path = r'interbank-internacional-2019/data_generation'
+rcc = pd.read_csv("interbank-internacional-2019/ib_base_rcc/ib_base_rcc.csv")
 ## unique keys
 ids         = rcc.id_persona.unique()
 products = rcc.producto.unique()
