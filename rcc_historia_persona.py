@@ -65,7 +65,5 @@ d = {"cod_banco": [count_baks],'mto_saldo': ['mean','sum'], 'clasif': ['mean','m
 rcc_banco = rcc.drop(['codmes'], axis=1).groupby(["id_persona", "producto"]).agg(d) \
     .unstack(level=1, fill_value=0).reset_index().set_index("id_persona").sort_index().astype("int32")
 
-rcc_banco.columns = [' '.join(col).strip() for col in rcc_banco.columns.values]
-
 rcc_file = str('rcc_historia_persona.csv')
 rcc_banco.to_csv(os.path.join(path,rcc_file))
