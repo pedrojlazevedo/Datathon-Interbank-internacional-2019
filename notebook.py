@@ -25,21 +25,19 @@ X_test["ratio"] = X_test["linea_ofrecida"] / X_test["ingreso_neto"]
 rcc.clasif.fillna(-1, inplace=True)
 rcc.rango_mora.fillna(-1, inplace=True)
 rcc_clasif = rcc.groupby(["codmes", "id_persona"]).clasif.max().reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_clasif_avg = rcc.groupby(["codmes", "id_persona"]).clasif.mean().reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_mora = rcc.groupby(["codmes", "id_persona", "rango_mora"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_producto = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_producto_avg = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.mean().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_banco = rcc.groupby(["codmes", "id_persona", "cod_banco"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_clasif_saldo = rcc.groupby(["codmes", "id_persona", "clasif"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 del rcc
 
 rcc_mora.columns = ["mora_" + str(c) if c != "id_persona" else c for c in rcc_mora.columns ]
 rcc_producto.columns = ["producto_" + str(c) if c != "id_persona" else c for c in rcc_producto.columns]
 rcc_banco.columns = ["banco_" + str(c) if c != "id_persona" else c for c in rcc_banco.columns]
-
-rcc_banco = rcc_banco.reset_index().set_index(["codmes", "id_persona"])
-rcc_banco['count_banks'] = rcc_banco.gt(0).sum(1)
-rcc_banco['sum_all_banks'] = rcc_banco.sum(1)
-rcc_banco = rcc_banco.reset_index().set_index("codmes").sort_index().astype("int32")
-print(rcc_banco)
-print(rcc_banco.head(3).to_string())
+rcc_producto_avg.columns = ["producto_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_avg.columns ]
+rcc_clasif_saldo.columns = ["clasif_saldo_" + str(c) if c != "id_persona" else c for c in rcc_clasif_saldo.columns ]
 
 camp_canal = campanias.groupby(["codmes", "id_persona", "canal_asignado"]).size().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 camp_prod = campanias.groupby(["codmes", "id_persona", "producto"]).size().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
@@ -93,9 +91,12 @@ for mes in meses.keys():
     print("*"*10, mes, "*"*10)
     res = pd.concat([
         rcc_clasif.loc[meses[mes]].groupby("id_persona").sum(),
+        rcc_clasif_avg.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_mora.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_producto.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_banco.loc[meses[mes]].groupby("id_persona").sum(),
+        rcc_producto_avg.loc[meses[mes]].groupby("id_persona").sum(),
+        rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum(),
         camp_canal.loc[meses[mes]].groupby("id_persona").sum(),
         camp_prod.loc[meses[mes]].groupby("id_persona").sum(),
         digital.loc[meses[mes]].groupby("id_persona").sum()
