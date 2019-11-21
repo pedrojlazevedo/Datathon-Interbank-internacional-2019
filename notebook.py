@@ -34,6 +34,13 @@ rcc_mora.columns = ["mora_" + str(c) if c != "id_persona" else c for c in rcc_mo
 rcc_producto.columns = ["producto_" + str(c) if c != "id_persona" else c for c in rcc_producto.columns]
 rcc_banco.columns = ["banco_" + str(c) if c != "id_persona" else c for c in rcc_banco.columns]
 
+rcc_banco = rcc_banco.reset_index().set_index(["codmes", "id_persona"])
+rcc_banco['count_banks'] = rcc_banco.gt(0).sum(1)
+rcc_banco['sum_all_banks'] = rcc_banco.sum(1)
+rcc_banco = rcc_banco.reset_index().set_index("codmes").sort_index().astype("int32")
+print(rcc_banco)
+print(rcc_banco.head(3).to_string())
+
 camp_canal = campanias.groupby(["codmes", "id_persona", "canal_asignado"]).size().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 camp_prod = campanias.groupby(["codmes", "id_persona", "producto"]).size().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 del campanias
