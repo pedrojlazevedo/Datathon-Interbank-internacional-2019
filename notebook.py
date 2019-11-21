@@ -55,8 +55,8 @@ del vehicular
 vehicular1.columns = [c + "_v1" for c in vehicular1.columns]
 vehicular2.columns = [c + "_v2" for c in vehicular2.columns]
 
-X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat).join(rcc_historia)
-X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat).join(rcc_historia)
+X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
+X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
 
 del vehicular1, vehicular2, reniec, sunat, rcc
 
@@ -120,18 +120,23 @@ gc.collect()
 drop_cols = ["codmes"]
 test_preds = []
 train_preds = []
-y_train["target"] = y_train["margen"].astype("float32")
-for mes in X_train.codmes.unique():
+
+X_train_reg = X_train[X_train.codtarget == 1].copy()
+print(X_train_reg)
+y_train_reg = y_train_reg[y_train_reg.codtarget == 1].copy()
+
+y_train_reg["target"] = y_train_reg["margen"].astype("float32")
+for mes in X_train_reg.codmes.unique():
     print("*"*10, mes, "*"*10)
-    Xt = X_train[X_train.codmes != mes]
-    yt = y_train.loc[Xt.index, "target"]
+    Xt = X_train_reg[X_train_reg.codmes != mes]
+    yt = y_train_reg.loc[Xt.index, "target"]
     Xt = Xt.drop(drop_cols, axis=1)
 
-    Xv = X_train[X_train.codmes == mes]
-    yv = y_train.loc[Xv.index, "target"]
+    Xv = X_train_reg[X_train_reg.codmes == mes]
+    yv = y_train_reg.loc[Xv.index, "target"]
     
     learner = LGBMRegressor(n_estimators=1000)
-    learner.fit(Xt, yt,  early_stopping_rounds=10, eval_metric="mae",
+    learner.fit(Xt, yt,  early_stopping_rounds=50, eval_metric="mae",
                 eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
     gc.collect()
     test_preds.append(pd.Series(learner.predict(X_test.drop(drop_cols, axis=1)),
@@ -150,6 +155,7 @@ drop_cols = ["codmes"]
 fi = []
 test_probs = []
 train_probs = []
+
 y_train["target"] = (y_train["margen"] > 0).astype("int32")
 for mes in X_train.codmes.unique():
     print("*"*10, mes, "*"*10)
@@ -161,7 +167,7 @@ for mes in X_train.codmes.unique():
     yv = y_train.loc[Xv.index, "target"]
     
     learner = LGBMClassifier(n_estimators=1000)
-    learner.fit(Xt, yt,  early_stopping_rounds=10, eval_metric="mae",
+    learner.fit(Xt, yt,  early_stopping_rounds=50, eval_metric="auc",
                 eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
     gc.collect()
     test_probs.append(pd.Series(learner.predict_proba(X_test.drop(drop_cols, axis=1))[:, -1],
