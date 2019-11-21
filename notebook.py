@@ -10,11 +10,11 @@ vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_
 campanias = pd.read_csv("interbank-internacional-2019/ib_base_campanias/ib_base_campanias.csv")
 rcc_historia = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv")
 
-y_train = train[['codmes', 'id_persona', 'margen']].copy()
+y_train = train[['codmes', 'id_persona', 'margen', "codtarget"]].copy()
 y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["codmes"].astype(str)
 # y_train["target"] = y_train["margen"].astype("float32")
 y_train = y_train.set_index("prediction_id")
-X_train = train.drop(["codtarget", "margen"], axis=1)
+X_train = train.drop(["margen"], axis=1)
 X_train["prediction_id"] = X_train["id_persona"].astype(str) + "_" + X_train["codmes"].astype(str)
 del train
 
@@ -124,8 +124,13 @@ train_preds = []
 X_train_reg = X_train[X_train.codtarget == 1].copy()
 print(X_train_reg)
 y_train_reg = y_train_reg[y_train_reg.codtarget == 1].copy()
-
 y_train_reg["target"] = y_train_reg["margen"].astype("float32")
+
+X_train = X_train.drop["codtarget"]
+y_train = y_train.drop["codtarget"]
+X_train_reg = X_train_reg.drop["codtarget"]
+y_train_reg = y_train_reg.drop["codtarget"]
+
 for mes in X_train_reg.codmes.unique():
     print("*"*10, mes, "*"*10)
     Xt = X_train_reg[X_train_reg.codmes != mes]
