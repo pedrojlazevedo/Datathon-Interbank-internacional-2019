@@ -9,6 +9,7 @@ digital = pd.read_csv("interbank-internacional-2019/ib_base_digital/ib_base_digi
 vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_vehicular.csv")
 campanias = pd.read_csv("interbank-internacional-2019/ib_base_campanias/ib_base_campanias.csv")
 rcc_historia = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv")
+digital_final = pd.read_csv("interbank-internacional-2019/data_generation/digital_final.csv")
 
 y_train = train[['codmes', 'id_persona', 'margen']].copy()
 y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["codmes"].astype(str)
@@ -58,7 +59,11 @@ vehicular2.columns = [c + "_v2" for c in vehicular2.columns]
 X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
 X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
 
-del vehicular1, vehicular2, reniec, sunat, rcc_historia
+print("Join Digital")
+X_train = X_train.reset_index().join(digital_final, on=["id_persona", "codmes"]).set_index("prediction_id")
+X_test = X_test.reset_index().join(digital_final, on=["id_persona", "codmes"]).set_index("prediction_id")
+
+del vehicular1, vehicular2, reniec, sunat, rcc_historia, digital_final
 
 import gc
 gc.collect()
