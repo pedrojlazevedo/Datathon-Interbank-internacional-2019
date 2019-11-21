@@ -126,10 +126,10 @@ print(X_train_reg)
 y_train_reg = y_train[y_train.codtarget == 1].copy()
 y_train_reg["target"] = y_train_reg["margen"].astype("float32")
 
-X_train = X_train.drop["codtarget"]
-y_train = y_train.drop["codtarget"]
-X_train_reg = X_train_reg.drop["codtarget"]
-y_train_reg = y_train_reg.drop["codtarget"]
+X_train = X_train.drop(["codtarget"])
+y_train = y_train.drop(["codtarget"])
+X_train_reg = X_train_reg.drop(["codtarget"])
+y_train_reg = y_train_reg.drop(["codtarget"])
 
 for mes in X_train_reg.codmes.unique():
     print("*"*10, mes, "*"*10)
