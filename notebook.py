@@ -58,7 +58,7 @@ vehicular2.columns = [c + "_v2" for c in vehicular2.columns]
 X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
 X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
 
-del vehicular1, vehicular2, reniec, sunat, rcc
+del vehicular1, vehicular2, reniec, sunat, rcc_historia
 
 import gc
 gc.collect()
