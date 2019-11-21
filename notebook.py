@@ -8,6 +8,7 @@ reniec = pd.read_csv("interbank-internacional-2019/ib_base_reniec/ib_base_reniec
 digital = pd.read_csv("interbank-internacional-2019/ib_base_digital/ib_base_digital.csv")
 vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_vehicular.csv")
 campanias = pd.read_csv("interbank-internacional-2019/ib_base_campanias/ib_base_campanias.csv")
+rcc_historia = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv")
 
 y_train = train[['codmes', 'id_persona', 'margen']].copy()
 y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["codmes"].astype(str)
@@ -47,14 +48,17 @@ sunat = sunat.groupby(["id_persona", "activ_econo"]).meses_alta.sum().unstack(le
 vehicular1 = vehicular.groupby(["id_persona", "marca"]).veh_var1.sum().unstack(level=1, fill_value=0).astype("float32")
 vehicular2 = vehicular.groupby(["id_persona", "marca"]).veh_var2.sum().unstack(level=1, fill_value=0).astype("float32")
 reniec = reniec.set_index("id_persona").astype("float32")
+rcc_historia.set_index("id_persona").astype("float32")
+
 del vehicular
 
 vehicular1.columns = [c + "_v1" for c in vehicular1.columns]
 vehicular2.columns = [c + "_v2" for c in vehicular2.columns]
 
-X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
-X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
-del vehicular1, vehicular2, reniec, sunat
+X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat).join(rcc_historia)
+X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat).join(rcc_historia)
+
+del vehicular1, vehicular2, reniec, sunat, rcc
 
 import gc
 gc.collect()
@@ -102,13 +106,7 @@ gc.collect()
 del rcc_clasif, rcc_mora, rcc_producto, rcc_banco, camp_canal, camp_prod, digital, complementos,res
 gc.collect()
 
-rcc = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv")
-gc.collect()
-rcc.set_index("id_persona").astype("float32")
-X_train = X_train.reset_index().set_index("id_persona").join(rcc)
-X_test = X_test.reset_index().set_index("id_persona").join(rcc)
-del rcc
-gc.collect()
+
 
 for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in X_train.columns]]):
     X_train["non_ascii_" + str(i)] = X_train[c]
