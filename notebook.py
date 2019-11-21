@@ -91,11 +91,11 @@ for mes in meses.keys():
     print("*"*10, mes, "*"*10)
     res = pd.concat([
         rcc_clasif.loc[meses[mes]].groupby("id_persona").sum(),
-        rcc_clasif_avg.loc[meses[mes]].groupby("id_persona").sum(),
+        #rcc_clasif_avg.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_mora.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_producto.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_banco.loc[meses[mes]].groupby("id_persona").sum(),
-        rcc_producto_avg.loc[meses[mes]].groupby("id_persona").sum(),
+        #rcc_producto_avg.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum(),
         camp_canal.loc[meses[mes]].groupby("id_persona").sum(),
         camp_prod.loc[meses[mes]].groupby("id_persona").sum(),
