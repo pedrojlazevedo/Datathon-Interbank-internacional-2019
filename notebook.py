@@ -90,16 +90,52 @@ complementos = []
 for mes in meses.keys():
     print("*"*10, mes, "*"*10)
     res = pd.concat([
+        camp_canal.loc[meses[mes]].groupby("id_persona").sum(),
+        camp_prod.loc[meses[mes]].groupby("id_persona").sum(),
+        digital.loc[meses[mes]].groupby("id_persona").sum()        
+    ], axis=1)
+    res["codmes"] = mes
+    res = res.reset_index().set_index(["id_persona", "codmes"]).astype("float32")
+    complementos.append(res)
+gc.collect()
+print("concatenando complementos")
+complementos = pd.concat(complementos)
+gc.collect()
+print("X_train join")
+X_train = X_train.reset_index().join(complementos, on=["id_persona", "codmes"]).set_index("prediction_id")
+gc.collect()
+print("X_test join")
+X_test = X_test.reset_index().join(complementos, on=["id_persona", "codmes"]).set_index("prediction_id")
+gc.collect()
+
+meses = {
+    201901: slice(201807, 201809),
+    201902: slice(201808, 201810),
+    201903: slice(201809, 201811),
+    201904: slice(201810, 201812),
+    201905: slice(201811, 201901),
+    201906: slice(201812, 201902),
+    201907: slice(201901, 201903)
+}
+
+complementos = []
+for mes in meses.keys():
+    print("*"*10, mes, "*"*10)
+    
+    temp = rcc_banco.loc[meses[mes]].groupby("id_persona").sum().copy()
+    temp = temp.reset_index().set_index(["codmes", "id_persona"])
+    temp['count_banks'] = temp.gt(0).sum(1)
+    temp['sum_all_banks'] = temp.sum(1)
+    temp = temp.reset_index().set_index("id_persona").sort_index().astype("int32")
+    res = pd.concat([
         rcc_clasif.loc[meses[mes]].groupby("id_persona").sum(),
-        #rcc_clasif_avg.loc[meses[mes]].groupby("id_persona").sum(),
+        rcc_clasif.loc[meses[mes]].groupby("id_persona").mean(),
         rcc_mora.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_producto.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_banco.loc[meses[mes]].groupby("id_persona").sum(),
-        #rcc_producto_avg.loc[meses[mes]].groupby("id_persona").sum(),
-        rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum(),
-        camp_canal.loc[meses[mes]].groupby("id_persona").sum(),
-        camp_prod.loc[meses[mes]].groupby("id_persona").sum(),
-        digital.loc[meses[mes]].groupby("id_persona").sum()
+        rcc_producto.loc[meses[mes]].groupby("id_persona").mean(),
+        temp,
+        rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum()
         
     ], axis=1)
     res["codmes"] = mes
@@ -119,8 +155,6 @@ gc.collect()
 
 del rcc_clasif, rcc_mora, rcc_producto, rcc_banco, camp_canal, camp_prod, digital, complementos,res
 gc.collect()
-
-
 
 for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in X_train.columns]]):
     X_train["non_ascii_" + str(i)] = X_train[c]
