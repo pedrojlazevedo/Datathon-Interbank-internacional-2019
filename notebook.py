@@ -123,7 +123,7 @@ train_preds = []
 
 X_train_reg = X_train[X_train.codtarget == 1].copy()
 print(X_train_reg)
-y_train_reg = y_train_reg[y_train_reg.codtarget == 1].copy()
+y_train_reg = y_train[y_train.codtarget == 1].copy()
 y_train_reg["target"] = y_train_reg["margen"].astype("float32")
 
 X_train = X_train.drop["codtarget"]
