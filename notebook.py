@@ -60,6 +60,7 @@ X_train = X_train.set_index("prediction_id").astype("int32").reset_index().set_i
 X_test = X_test.set_index("prediction_id").astype("int32").reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).join(reniec).join(sunat)
 
 print("Join Digital")
+digital_final = digital_final.set_index(["id_persona", "codmes"]).astype("float32")
 X_train = X_train.reset_index().join(digital_final, on=["id_persona", "codmes"]).set_index("prediction_id")
 X_test = X_test.reset_index().join(digital_final, on=["id_persona", "codmes"]).set_index("prediction_id")
 
