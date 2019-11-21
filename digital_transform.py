@@ -38,11 +38,24 @@ test = digital.copy()
 test["codday"] = test["codday"].apply(lambda x : int(x/100))
 test = test.rename(columns={"codday":"codmes"})
 df_to_save = test.head(0).copy()
+aux = 0
+cols = test.columns
 for index, row in test.iterrows():
     meses = mapMonth(row["codmes"])
     for mes in meses:
         row["codmes"] = mes
+        if mes == 201906 or mes == 201907 or mes == 201901:
+            for col in cols:
+                if col == "id_persona" or col == "codmes":
+                    continue
+                if mes == 201906 or mes == 201901:
+                    row[col] = row[col] * 3/2
+                elif mes == 201907:
+                    row[col] = row[col] * 3
         df_to_save = df_to_save.append(row, ignore_index=True)
+    if (aux % 1000) == 0:
+        print("Vai mais mil: " + str(aux))
+    aux += 1
 
 df_to_save = df_to_save.set_index(['codmes'])
 df_to_save.index = df_to_save.index.map(int)

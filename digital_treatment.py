@@ -30,6 +30,15 @@ print((test['busqmc']!=0).sum())
 print((test['busqamex']!=0).sum())
 print(len(test.columns))
 '''
+def sum_h(series):
+    sum = 0
+    for index, value in series.items():
+        print(str(index))
+        print(value)
+        sum += value
+
+    return sum
+
 # Dropping columns containing only zeroes
 digAnalyzed = test.drop(['time_tc','time_ctasld','time_mllp','time_mllst','busqmc','busqamex'],axis=1) 
 '''
@@ -42,7 +51,7 @@ digAnalyzed["codday"] = digAnalyzed["codday"].apply(lambda x : int(x/100))
 finalDigital = digAnalyzed.rename(columns={"codday":"codmes"})
 '''
 # Calculating mean min max for every column
-totalCount = digAnalyzed.groupby(['id_persona','codmes']).aggregate(['mean','min','max','sum'])
+totalCount = digAnalyzed.groupby(['id_persona','codmes']).aggregate(['mean','min','max',sum_h])
 path = "interbank-internacional-2019\data_generation"
 digital_file = str('digital_final.csv')
 # Converting multi level header to single level
