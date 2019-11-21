@@ -67,6 +67,8 @@ print(rcc_banco)
 rcc_banco = rcc_banco.agg(d) 
 print(rcc_banco)
 rcc_banco = rcc_banco.unstack(level=1, fill_value=0).reset_index().set_index("id_persona").sort_index().astype("float32")
-
+print(rcc_banco)
+rcc_banco.columns = [' '.join(col).strip() for col in rcc_banco.columns.values]
+print(rcc_banco)
 rcc_file = str('rcc_historia_persona.csv')
 rcc_banco.to_csv(os.path.join(path,rcc_file))
