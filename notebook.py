@@ -121,16 +121,39 @@ meses = {
 complementos = []
 for mes in meses.keys():
     print("*"*10, mes, "*"*10)
+    
+    temp = rcc_banco.loc[meses[mes]].groupby("id_persona").sum().copy()
+    temp['count_banks'] = temp.gt(0).sum(1)
+    temp['sum_all_banks'] = temp.sum(1)
+    temp = temp.reset_index().set_index("id_persona").sort_index().astype("int32")
+
+    rcc_clasif_avg = rcc_clasif.loc[meses[mes]].groupby("id_persona").mean()
+    rcc_clasif_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_clasif_avg.columns ]
+    
+    rcc_producto_avg = rcc_producto.loc[meses[mes]].groupby("id_persona").mean()
+    rcc_producto_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_avg.columns ]
+    
+    rcc_producto_std = rcc_producto.loc[meses[mes]].groupby("id_persona").std()
+    rcc_producto_std.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_std.columns ]
+    
+    rcc_producto_min = rcc_producto.loc[meses[mes]].groupby("id_persona").min()
+    rcc_producto_min.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_min.columns ]
+    
+    rcc_producto_max = rcc_producto.loc[meses[mes]].groupby("id_persona").max()
+    rcc_producto_max.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_max.columns ]
 
     res = pd.concat([
-        
+
         rcc_clasif.loc[meses[mes]].groupby("id_persona").sum(),
-        rcc_clasif.loc[meses[mes]].groupby("id_persona").mean(),
+        rcc_clasif_avg,
         rcc_mora.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_producto.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_banco.loc[meses[mes]].groupby("id_persona").sum(),
-        rcc_producto.loc[meses[mes]].groupby("id_persona").mean(),
-        rcc_banco.loc[meses[mes]].groupby("id_persona").sum(),
+        rcc_producto_avg,
+        rcc_producto_std,
+        rcc_producto_min,
+        rcc_producto_max,
+        temp,
         rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum()
         
     ], axis=1)
