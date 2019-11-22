@@ -121,21 +121,16 @@ meses = {
 complementos = []
 for mes in meses.keys():
     print("*"*10, mes, "*"*10)
-    
-    temp = rcc_banco.loc[meses[mes]].groupby("id_persona").sum().copy()
-    temp['count_banks'] = temp.gt(0).sum(1)
-    temp['sum_all_banks'] = temp.sum(1)
-    print(temp)
-    print(temp.head(2).to_string())
-    temp = temp.reset_index().set_index("id_persona").sort_index().astype("int32")
+
     res = pd.concat([
+        
         rcc_clasif.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_clasif.loc[meses[mes]].groupby("id_persona").mean(),
         rcc_mora.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_producto.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_banco.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_producto.loc[meses[mes]].groupby("id_persona").mean(),
-        temp,
+        rcc_banco.loc[meses[mes]].groupby("id_persona").sum(),
         rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum()
         
     ], axis=1)
