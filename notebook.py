@@ -8,7 +8,7 @@ reniec = pd.read_csv("interbank-internacional-2019/ib_base_reniec/ib_base_reniec
 digital = pd.read_csv("interbank-internacional-2019/ib_base_digital/ib_base_digital.csv")
 vehicular = pd.read_csv("interbank-internacional-2019/ib_base_vehicular/ib_base_vehicular.csv")
 campanias = pd.read_csv("interbank-internacional-2019/ib_base_campanias/ib_base_campanias.csv")
-rcc_historia = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv")
+#rcc_historia = pd.read_csv("interbank-internacional-2019/data_generation/rcc_historia_persona.csv")
 digital_final = pd.read_csv("interbank-internacional-2019/data_generation/digital_final.csv")
 
 y_train = train[['codmes', 'id_persona', 'margen']].copy()
@@ -54,7 +54,7 @@ sunat = sunat.groupby(["id_persona", "activ_econo"]).meses_alta.sum().unstack(le
 vehicular1 = vehicular.groupby(["id_persona", "marca"]).veh_var1.sum().unstack(level=1, fill_value=0).astype("float32")
 vehicular2 = vehicular.groupby(["id_persona", "marca"]).veh_var2.sum().unstack(level=1, fill_value=0).astype("float32")
 reniec = reniec.set_index("id_persona").astype("float32")
-rcc_historia.set_index("id_persona").astype("float32")
+#rcc_historia.set_index("id_persona").astype("float32")
 
 del vehicular
 
@@ -69,7 +69,7 @@ digital_final = digital_final.set_index(["id_persona", "codmes"]).astype("float3
 X_train = X_train.reset_index().join(digital_final, on=["id_persona", "codmes"]).set_index("prediction_id")
 X_test = X_test.reset_index().join(digital_final, on=["id_persona", "codmes"]).set_index("prediction_id")
 
-del vehicular1, vehicular2, reniec, sunat, rcc_historia, digital_final
+del vehicular1, vehicular2, reniec, sunat, digital_final#, rcc_historia
 
 import gc
 gc.collect()
@@ -132,7 +132,7 @@ for mes in meses.keys():
     
     rcc_producto_avg = rcc_producto.loc[meses[mes]].groupby("id_persona").mean()
     rcc_producto_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_avg.columns ]
-    
+    #eu tenho que fazer isto com os valores médios em cima e dar a média aqui também... 
     rcc_producto_std = rcc_producto.loc[meses[mes]].groupby("id_persona").std()
     rcc_producto_std.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_std.columns ]
     
