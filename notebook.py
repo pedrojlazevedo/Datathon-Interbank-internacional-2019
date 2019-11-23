@@ -29,6 +29,9 @@ rcc_clasif_avg = rcc.groupby(["codmes", "id_persona"]).clasif.mean().reset_index
 rcc_mora = rcc.groupby(["codmes", "id_persona", "rango_mora"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_producto = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_producto_avg = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.mean().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_producto_std = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.std().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_producto_min = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.min().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_producto_max = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.max().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_banco = rcc.groupby(["codmes", "id_persona", "cod_banco"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_clasif_saldo = rcc.groupby(["codmes", "id_persona", "clasif"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 del rcc
@@ -37,6 +40,9 @@ rcc_mora.columns = ["mora_" + str(c) if c != "id_persona" else c for c in rcc_mo
 rcc_producto.columns = ["producto_" + str(c) if c != "id_persona" else c for c in rcc_producto.columns]
 rcc_banco.columns = ["banco_" + str(c) if c != "id_persona" else c for c in rcc_banco.columns]
 rcc_producto_avg.columns = ["producto_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_avg.columns ]
+rcc_producto_std.columns = ["producto_std_" + str(c) if c != "id_persona" else c for c in rcc_producto_std.columns ]
+rcc_producto_min.columns = ["producto_min_" + str(c) if c != "id_persona" else c for c in rcc_producto_min.columns ]
+rcc_producto_max.columns = ["producto_max_" + str(c) if c != "id_persona" else c for c in rcc_producto_max.columns ]
 rcc_clasif_saldo.columns = ["clasif_saldo_" + str(c) if c != "id_persona" else c for c in rcc_clasif_saldo.columns ]
 
 camp_canal = campanias.groupby(["codmes", "id_persona", "canal_asignado"]).size().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
@@ -127,19 +133,24 @@ for mes in meses.keys():
     temp['sum_all_banks'] = temp.sum(1)
     temp = temp.reset_index().set_index("id_persona").sort_index().astype("int32")
 
-    rcc_clasif_avg = rcc_clasif.loc[meses[mes]].groupby("id_persona").mean()
+    #DONE
+    rcc_clasif_avg = rcc_clasif_avg.loc[meses[mes]].groupby("id_persona").mean()
     rcc_clasif_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_clasif_avg.columns ]
     
-    rcc_producto_avg = rcc_producto.loc[meses[mes]].groupby("id_persona").mean()
+    #DONE
+    rcc_producto_avg = rcc_producto_avg.loc[meses[mes]].groupby("id_persona").mean()
     rcc_producto_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_avg.columns ]
-    #eu tenho que fazer isto com os valores médios em cima e dar a média aqui também... 
-    rcc_producto_std = rcc_producto.loc[meses[mes]].groupby("id_persona").std()
+    
+    #DONE 
+    rcc_producto_std = rcc_producto_std.loc[meses[mes]].groupby("id_persona").std()
     rcc_producto_std.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_std.columns ]
     
-    rcc_producto_min = rcc_producto.loc[meses[mes]].groupby("id_persona").min()
+    #DONE 
+    rcc_producto_min = rcc_producto_min.loc[meses[mes]].groupby("id_persona").min()
     rcc_producto_min.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_min.columns ]
     
-    rcc_producto_max = rcc_producto.loc[meses[mes]].groupby("id_persona").max()
+    #DONE
+    rcc_producto_max = rcc_producto_max.loc[meses[mes]].groupby("id_persona").max()
     rcc_producto_max.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_max.columns ]
 
     res = pd.concat([
