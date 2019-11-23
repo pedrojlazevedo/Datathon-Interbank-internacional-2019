@@ -133,25 +133,11 @@ for mes in meses.keys():
     temp['sum_all_banks'] = temp.sum(1)
     temp = temp.reset_index().set_index("id_persona").sort_index().astype("int32")
 
-    #DONE
-    rcc_clasif_avg = rcc_clasif_avg.loc[meses[mes]].groupby("id_persona").mean()
-    rcc_clasif_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_clasif_avg.columns ]
-    
-    #DONE
-    rcc_producto_avg = rcc_producto_avg.loc[meses[mes]].groupby("id_persona").mean()
-    rcc_producto_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_avg.columns ]
-    
-    #DONE 
-    rcc_producto_std = rcc_producto_std.loc[meses[mes]].groupby("id_persona").std()
-    rcc_producto_std.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_std.columns ]
-    
-    #DONE 
-    rcc_producto_min = rcc_producto_min.loc[meses[mes]].groupby("id_persona").min()
-    rcc_producto_min.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_min.columns ]
-    
-    #DONE
+    rcc_clasif_avg = rcc_clasif_avg.loc[meses[mes]].groupby("id_persona").mean()    
+    rcc_producto_avg = rcc_producto_avg.loc[meses[mes]].groupby("id_persona").mean()    
+    rcc_producto_std = rcc_producto_std.loc[meses[mes]].groupby("id_persona").std()     
+    rcc_producto_min = rcc_producto_min.loc[meses[mes]].groupby("id_persona").min()    
     rcc_producto_max = rcc_producto_max.loc[meses[mes]].groupby("id_persona").max()
-    rcc_producto_max.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_producto_max.columns ]
 
     res = pd.concat([
 
@@ -168,6 +154,7 @@ for mes in meses.keys():
         rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum()
         
     ], axis=1)
+    
     res["codmes"] = mes
     res = res.reset_index().set_index(["id_persona", "codmes"]).astype("float32")
     complementos.append(res)
