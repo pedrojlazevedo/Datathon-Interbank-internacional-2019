@@ -179,6 +179,26 @@ for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in
     X_test["non_ascii_" + str(i)] = X_test[c]
     X_test = X_test.drop(c, axis= 1)
 
+#########################
+# SAVE DATA AND LOAD IT #
+#########################
+
+X_train.to_csv("/interbank-internacional-2019/data_generation/train_data.csv", header=True)
+X_test.to_csv("/interbank-internacional-2019/data_generation/test_data.csv", header=True)
+
+from feature_selection import FeatureSelector
+
+# I placed margen as binary for the feature selection
+train_labels = (y_train["margen"] > 0).astype(int)
+fs = FeatureSelector(data = train, labels = train_labels)
+fs.identify_missing(missing_threshold=0.75)
+missing_features = fs.ops['missing']
+print(missing_features[:10])
+
+##############
+# Train DATA #
+##############
+
 from lightgbm import LGBMRegressor
 gc.collect()
 
