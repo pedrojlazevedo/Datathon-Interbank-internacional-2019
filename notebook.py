@@ -29,7 +29,7 @@ rcc_clasif_avg = rcc.groupby(["codmes", "id_persona"]).clasif.mean().reset_index
 rcc_mora = rcc.groupby(["codmes", "id_persona", "rango_mora"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_producto = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_producto_avg = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.mean().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
-rcc_producto_std = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.std().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
+rcc_producto_std = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.std().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("float32")
 rcc_producto_min = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.min().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_producto_max = rcc.groupby(["codmes", "id_persona", "producto"]).mto_saldo.max().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 rcc_banco = rcc.groupby(["codmes", "id_persona", "cod_banco"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
@@ -154,7 +154,7 @@ for mes in meses.keys():
         rcc_clasif_saldo.loc[meses[mes]].groupby("id_persona").sum()
         
     ], axis=1)
-    
+
     res["codmes"] = mes
     res = res.reset_index().set_index(["id_persona", "codmes"]).astype("float32")
     complementos.append(res)
