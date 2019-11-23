@@ -195,7 +195,7 @@ from feature_selection import FeatureSelector
 
 # I placed margen as binary for the feature selection
 train_labels = (y_train["margen"] > 0).astype(int)
-fs = FeatureSelector(data = train, labels = train_labels)
+fs = FeatureSelector(data = X_train, labels = train_labels)
 fs.identify_missing(missing_threshold=0.75)
 missing_features = fs.ops['missing']
 print(missing_features[:10])
