@@ -200,9 +200,10 @@ fs.identify_missing(missing_threshold=0.80)
 missing_features = fs.ops['missing']
 print(missing_features[:10])
 
-X_train.drop(missing_features, axis = 1, inplace = true)
-X_test.drop(missing_features, axis = 1, inplace = true)
-y_train.drop(missing_features, axis = 1, inplace = true)
+# Remove features within a threshold > 0.8 of missing values
+X_train.drop(missing_features, axis = 1, inplace = True)
+X_test.drop(missing_features, axis = 1, inplace = True)
+y_train.drop(missing_features, axis = 1, inplace = True)
 
 ##############
 # Train DATA #
