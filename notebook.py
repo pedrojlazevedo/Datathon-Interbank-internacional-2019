@@ -196,14 +196,13 @@ from feature_selection import FeatureSelector
 # I placed margen as binary for the feature selection
 train_labels = (y_train["margen"] > 0).astype(int)
 fs = FeatureSelector(data = X_train, labels = train_labels)
-fs.identify_missing(missing_threshold=0.80)
+fs.identify_missing(missing_threshold=0.75)
 missing_features = fs.ops['missing']
 print(missing_features[:10])
 
-# Remove features within a threshold > 0.8 of missing values
+# Remove features within a threshold > 0.75 of missing values
 X_train.drop(missing_features, axis = 1, inplace = True)
 X_test.drop(missing_features, axis = 1, inplace = True)
-y_train.drop(missing_features, axis = 1, inplace = True)
 
 ##############
 # Train DATA #
