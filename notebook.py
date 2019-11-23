@@ -1,5 +1,8 @@
 import pandas as pd
 
+SAVE = False
+
+
 X_test = pd.read_csv("interbank-internacional-2019/ib_base_inicial_test/ib_base_inicial_test.csv")
 sunat = pd.read_csv("interbank-internacional-2019/ib_base_sunat/ib_base_sunat.csv")
 train = pd.read_csv("interbank-internacional-2019/ib_base_inicial_train/ib_base_inicial_train.csv")
@@ -183,8 +186,10 @@ for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in
 # SAVE DATA AND LOAD IT #
 #########################
 
-X_train.to_csv("/interbank-internacional-2019/data_generation/train_data.csv", header=True)
-X_test.to_csv("/interbank-internacional-2019/data_generation/test_data.csv", header=True)
+if SAVE:
+
+    X_train.to_csv("/interbank-internacional-2019/data_generation/train_data.csv", header=True)
+    X_test.to_csv("/interbank-internacional-2019/data_generation/test_data.csv", header=True)
 
 from feature_selection import FeatureSelector
 
