@@ -39,6 +39,7 @@ rcc_banco = rcc.groupby(["codmes", "id_persona", "cod_banco"]).mto_saldo.sum().u
 rcc_clasif_saldo = rcc.groupby(["codmes", "id_persona", "clasif"]).mto_saldo.sum().unstack(level=2, fill_value=0).reset_index().set_index("codmes").sort_index().astype("int32")
 del rcc
 
+rcc_clasif_avg.columns = ["clasif_avg_" + str(c) if c != "id_persona" else c for c in rcc_clasif_avg.columns ]
 rcc_mora.columns = ["mora_" + str(c) if c != "id_persona" else c for c in rcc_mora.columns ]
 rcc_producto.columns = ["producto_" + str(c) if c != "id_persona" else c for c in rcc_producto.columns]
 rcc_banco.columns = ["banco_" + str(c) if c != "id_persona" else c for c in rcc_banco.columns]
