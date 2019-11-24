@@ -189,11 +189,15 @@ for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in
 
 cols = []
 count = 1
-
+is_codmes = True
 for column in X_train.columns:
     flag = False
     for c_2 in X_train.columns:
         if c_2 == column:
+            if c_2 == "codmes" and is_codmes:
+                is_codmes = False
+                cols.append(column)
+                break
             flag = True
             cols.append(f'{column}_{count}')
             count+=1
@@ -226,7 +230,6 @@ print(correlated_features[:10])
 
 all_to_remove = fs.check_removal()
 
-all_to_remove.remove("codmes")
 for col in all_to_remove:
     print(col)
     if col == "codmes":

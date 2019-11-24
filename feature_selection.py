@@ -204,7 +204,7 @@ class FeatureSelector():
             # Find the correlated features
             #print(upper)
             #print(upper.index)
-            print(upper[column])
+            #print(upper[column])
             corr_features = list(upper.index[upper[column].abs() > correlation_threshold])
 
             # Find the correlated values
