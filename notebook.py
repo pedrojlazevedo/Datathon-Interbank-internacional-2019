@@ -193,11 +193,9 @@ if SAVE:
 
 from feature_selection import FeatureSelector
 
-X_train_copy = X_train.reset_index().copy
-
 # I placed margen as binary for the feature selection
 train_labels = (y_train["margen"] > 0).astype(int)
-fs = FeatureSelector(data = X_train_copy, labels = train_labels)
+fs = FeatureSelector(data = X_train, labels = train_labels)
 
 # Features with huge missing values
 fs.identify_missing(missing_threshold=0.75)
