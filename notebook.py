@@ -228,7 +228,7 @@ correlated_features = fs.ops['collinear']
 print(correlated_features[:10])
 
 all_to_remove = fs.check_removal()
-
+all_to_remove_new = []
 for col in all_to_remove:
     print(col)
     if col == "codmes":
