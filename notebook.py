@@ -189,12 +189,17 @@ for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in
 
 cols = []
 count = 1
+
 for column in X_train.columns:
-    if column == 'clasif':
-        cols.append(f'clasif_{count}')
-        count+=1
-        continue
-    cols.append(column)
+    flag = False
+    for c_2 in X_train.columns:
+        if c_2 == column:
+            flag = True
+            cols.append(f'{c_2}_{count}')
+            count+=1
+            continue
+    if not flag:
+        cols.append(column)
 X_train.columns = cols
 X_test.columns = cols
 
@@ -210,9 +215,9 @@ train_labels = (y_train["margen"] > 0).astype(int)
 fs = FeatureSelector(data = X_train, labels = train_labels)
 
 # Features with huge missing values
-fs.identify_missing(missing_threshold=0.75)
-missing_features = fs.ops['missing']
-print(missing_features[:10])
+#fs.identify_missing(missing_threshold=0.75)
+#missing_features = fs.ops['missing']
+#print(missing_features[:10])
 
 # Collinear features based on Pearson
 fs.identify_collinear(correlation_threshold=0.97)
