@@ -196,7 +196,6 @@ for column in X_train.columns:
         if c_2 == column:
             if c_2 == "codmes" and is_codmes:
                 is_codmes = False
-                cols.append(column)
                 break
             flag = True
             cols.append(f'{column}_{count}')
