@@ -224,7 +224,7 @@ fs = FeatureSelector(data = X_train, labels = train_labels)
 #print(missing_features[:10])
 
 # Collinear features based on Pearson
-fs.identify_collinear(correlation_threshold=0.97)
+fs.identify_collinear(correlation_threshold=0.98)
 correlated_features = fs.ops['collinear']
 print(correlated_features[:10])
 
