@@ -202,8 +202,8 @@ class FeatureSelector():
         for column in to_drop:
 
             # Find the correlated features
-            print(upper)
-            print(upper.index)
+            #print(upper)
+            #print(upper.index)
             print(upper[column])
             corr_features = list(upper.index[upper[column].abs() > correlation_threshold])
 

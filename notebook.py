@@ -186,6 +186,17 @@ for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in
 # SAVE DATA AND LOAD IT #
 #########################
 
+cols = []
+count = 1
+for column in X_train.columns:
+    if column == 'clasif':
+        cols.append(f'clasif_{count}')
+        count+=1
+        continue
+    cols.append(column)
+X_train.columns = cols
+X_test.columns = cols
+
 if SAVE:
 
     X_train.to_csv("/interbank-internacional-2019/data_generation/train_data.csv", header=True)
