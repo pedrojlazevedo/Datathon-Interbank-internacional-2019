@@ -221,11 +221,24 @@ fs = FeatureSelector(data = X_train, labels = train_labels)
 #fs.identify_missing(missing_threshold=0.75)
 #missing_features = fs.ops['missing']
 #print(missing_features[:10])
-'''
+
 # Collinear features based on Pearson
 fs.identify_collinear(correlation_threshold=0.97)
 correlated_features = fs.ops['collinear']
 print(correlated_features[:10])
+
+# Zero importance 
+fs.identify_zero_importance(task = 'classification', eval_metric = 'auc', n_iterations = 10, early_stopping = True)
+one_hot_features = fs.one_hot_features
+base_features = fs.base_features
+print('There are %d original features' % len(base_features))
+print('There are %d one-hot features' % len(one_hot_features))
+zero_importance_features = fs.ops['zero_importance']
+zero_importance_features[10:15]
+
+fs.identify_low_importance(cumulative_importance = 0.99)
+low_importance_features = fs.ops['low_importance']
+low_importance_features[:5]
 
 all_to_remove = fs.check_removal()
 all_to_remove_new = []
@@ -237,7 +250,7 @@ for col in all_to_remove:
 # Remove features within a threshold > 0.75 of missing values
 X_train.drop(all_to_remove_new, axis = 1, inplace = True)
 X_test.drop(all_to_remove_new, axis = 1, inplace = True)
-'''
+
 
 ##############
 # Train DATA #
