@@ -205,7 +205,8 @@ X_train.drop(missing_features, axis = 1, inplace = True)
 X_test.drop(missing_features, axis = 1, inplace = True)
 
 # Collinear features based on Pearson
-fs.identify_collinear(correlation_threshold=0.95)
+fs = FeatureSelector(data = X_train, labels = train_labels)
+fs.identify_collinear(correlation_threshold=0.97)
 correlated_features = fs.ops['collinear']
 print(correlated_features[:10])
 
