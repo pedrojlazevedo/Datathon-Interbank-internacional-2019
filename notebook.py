@@ -225,14 +225,16 @@ correlated_features = fs.ops['collinear']
 print(correlated_features[:10])
 
 all_to_remove = fs.check_removal()
-all_to_remove[10:25]
 
-if "codmes" in all_to_remove:
-    all_to_remove.remove("codmes")
-
+all_to_remove.remove("codmes")
+for col in all_to_remove:
+    print(col)
+    if col == "codmes":
+        continue
+    all_to_remove_new.append(col)
 # Remove features within a threshold > 0.75 of missing values
-X_train.drop(all_to_remove, axis = 1, inplace = True)
-X_test.drop(all_to_remove, axis = 1, inplace = True)
+X_train.drop(all_to_remove_new, axis = 1, inplace = True)
+X_test.drop(all_to_remove_new, axis = 1, inplace = True)
 
 
 ##############
