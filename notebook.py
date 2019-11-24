@@ -212,7 +212,8 @@ if SAVE:
     X_test.to_csv("/interbank-internacional-2019/data_generation/test_data.csv", header=True)
 
 from feature_selection import FeatureSelector
-
+X_train.fillna(-1)
+X_test.fillna(-1)
 # I placed margen as binary for the feature selection
 train_labels = (y_train["margen"] > 0).astype(int)
 fs = FeatureSelector(data = X_train, labels = train_labels)
@@ -221,7 +222,7 @@ fs = FeatureSelector(data = X_train, labels = train_labels)
 #fs.identify_missing(missing_threshold=0.75)
 #missing_features = fs.ops['missing']
 #print(missing_features[:10])
-'''
+
 # Collinear features based on Pearson
 fs.identify_collinear(correlation_threshold=0.97)
 correlated_features = fs.ops['collinear']
@@ -250,9 +251,8 @@ for col in all_to_remove:
 # Remove features within a threshold > 0.75 of missing values
 X_train.drop(all_to_remove_new, axis = 1, inplace = True)
 X_test.drop(all_to_remove_new, axis = 1, inplace = True)
-'''
-X_train.fillna(0)
-X_test.fillna(0)
+
+
 ##############
 # Train DATA #
 ##############
