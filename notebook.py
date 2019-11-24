@@ -251,8 +251,8 @@ for col in all_to_remove:
 X_train.drop(all_to_remove_new, axis = 1, inplace = True)
 X_test.drop(all_to_remove_new, axis = 1, inplace = True)
 '''
-X_train.fillna(-1)
-X_test.fillna(-1)
+X_train.fillna(0)
+X_test.fillna(0)
 ##############
 # Train DATA #
 ##############
