@@ -195,7 +195,7 @@ for column in X_train.columns:
     for c_2 in X_train.columns:
         if c_2 == column:
             flag = True
-            cols.append(f'{~column}_{count}')
+            cols.append(f'{column}_{count}')
             count+=1
             break
     if not flag:
@@ -226,6 +226,9 @@ print(correlated_features[:10])
 
 all_to_remove = fs.check_removal()
 all_to_remove[10:25]
+
+if "codmes" in all_to_remove:
+    all_to_remove.remove("codmes")
 
 # Remove features within a threshold > 0.75 of missing values
 X_train.drop(all_to_remove, axis = 1, inplace = True)
