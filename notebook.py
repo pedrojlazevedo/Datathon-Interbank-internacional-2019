@@ -195,9 +195,9 @@ for column in X_train.columns:
     for c_2 in X_train.columns:
         if c_2 == column:
             flag = True
-            cols.append(f'{c_2}_{count}')
+            cols.append(f'{~column}_{count}')
             count+=1
-            continue
+            break
     if not flag:
         cols.append(column)
 X_train.columns = cols
