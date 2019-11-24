@@ -204,12 +204,6 @@ print(missing_features[:10])
 X_train.drop(missing_features, axis = 1, inplace = True)
 X_test.drop(missing_features, axis = 1, inplace = True)
 
-#Find data with single values
-fs.identify_single_unique()
-fs = FeatureSelector(data = X_train, labels = train_labels)
-single_unique = fs.ops['single_unique']
-print(single_unique)
-
 # Collinear features based on Pearson
 fs.identify_collinear(correlation_threshold=0.95)
 correlated_features = fs.ops['collinear']
