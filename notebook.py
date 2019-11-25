@@ -1,6 +1,6 @@
 import pandas as pd
 
-SAVE = False
+SAVE = True
 
 
 X_test = pd.read_csv("interbank-internacional-2019/ib_base_inicial_test/ib_base_inicial_test.csv")
@@ -208,11 +208,6 @@ for column in X_train.columns:
 X_train.columns = cols
 X_test.columns = cols
 
-if SAVE:
-
-    X_train.to_csv("/interbank-internacional-2019/data_generation/train_data.csv", header=True)
-    X_test.to_csv("/interbank-internacional-2019/data_generation/test_data.csv", header=True)
-
 from feature_selection import FeatureSelector
 X_train.fillna(-1)
 X_test.fillna(-1)
@@ -254,6 +249,12 @@ for col in all_to_remove:
 X_train.drop(all_to_remove_new, axis = 1, inplace = True)
 X_test.drop(all_to_remove_new, axis = 1, inplace = True)
 
+if SAVE:
+
+    X_train.to_csv("interbank-internacional-2019/data_generation/train_data.csv", header=True)
+    X_test.to_csv("interbank-internacional-2019/data_generation/test_data.csv", header=True)
+
+
 ##############
 # Train DATA #
 ##############
@@ -275,7 +276,7 @@ for mes in X_train.codmes.unique():
     yv = y_train.loc[Xv.index, "target"]
     
     learner = LGBMRegressor(n_estimators=1000)
-    learner.fit(Xt, yt,  early_stopping_rounds=50, eval_metric="mae",
+    learner.fit(Xt, yt,  early_stopping_rounds=50, eval_metric="rmse",
                 eval_set=[(Xt, yt), (Xv.drop(drop_cols, axis=1), yv)], verbose=50)
     gc.collect()
     test_preds.append(pd.Series(learner.predict(X_test.drop(drop_cols, axis=1)),
