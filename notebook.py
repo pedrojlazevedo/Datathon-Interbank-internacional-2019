@@ -268,6 +268,14 @@ vehicular2.columns = [c + "_v2" for c in vehicular2.columns]
 X_train = X_train.reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).set_index("prediction_id")
 X_test = X_test.reset_index().set_index("id_persona").join(vehicular1).join(vehicular2).set_index("prediction_id")
 
+gc.collect()
+
+for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in X_train.columns]]):
+    X_train["non_ascii_" + str(i)] = X_train[c]
+    X_train = X_train.drop(c, axis= 1)
+    X_test["non_ascii_" + str(i)] = X_test[c]
+    X_test = X_test.drop(c, axis= 1)
+
 ##############
 # Train DATA #
 ##############
