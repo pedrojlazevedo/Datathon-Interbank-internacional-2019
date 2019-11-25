@@ -197,6 +197,8 @@ for column in X_train.columns:
             if c_2 == "codmes" and is_codmes:
                 is_codmes = False
                 break
+            if c_2 == "id_persona":
+                break
             flag = True
             cols.append(f'{column}_{count}')
             count+=1
@@ -245,7 +247,7 @@ all_to_remove = fs.check_removal()
 all_to_remove_new = []
 for col in all_to_remove:
     print(col)
-    if col == "codmes":
+    if col == "codmes" or col == "id_persona":
         continue
     all_to_remove_new.append(col)
 # Remove features within a threshold > 0.75 of missing values
