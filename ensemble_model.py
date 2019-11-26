@@ -51,9 +51,9 @@ def zip_stacked_classifiers(*args):
 stacked_clf_list = zip_stacked_classifiers(clf_array, names)
 best_combination = [0.00, ""]
 
-X_train.fillna(-1)
-X_test.fillna(-1)
-y_train.fillna(-1)
+X_train = X_train.fillna(-1)
+X_test = X_test.fillna(-1)
+y_train = y_train.fillna(-1)
 
 for mes in X_train.codmes.unique():
     Xt = X_train[X_train.codmes != mes]
@@ -63,7 +63,7 @@ for mes in X_train.codmes.unique():
     Xv = X_train[X_train.codmes == mes]
     Xv = Xv.drop(drop_cols, axis=1)
     yv = y_train.loc[Xv.index, "target"]
-
+'''
 print(Xt)
 print(Xv)
 print(yt)
@@ -74,6 +74,8 @@ Xv.fillna(-1)
 yt.fillna(-1)
 yv.fillna(-1)
 
+print(Xt)
+'''
 for clf in stacked_clf_list:
     ensemble = SuperLearner(scorer = accuracy_score, 
                             random_state = seed, 
