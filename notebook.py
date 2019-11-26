@@ -20,7 +20,7 @@ y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["co
 y_train = y_train.set_index("prediction_id")
 
 #X_train = train.drop(["codtarget", "margen"], axis=1)
-X_train = train.drop("margen", axis=1)
+X_train = train.drop("codtarget", axis=1)
 
 X_train["prediction_id"] = X_train["id_persona"].astype(str) + "_" + X_train["codmes"].astype(str)
 del train
