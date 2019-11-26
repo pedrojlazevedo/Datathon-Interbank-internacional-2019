@@ -17,6 +17,7 @@ from itertools import combinations
 lr = LogisticRegression()
 
 # Create classifiers
+seed = 1075
 rf = RandomForestClassifier()
 et = ExtraTreesClassifier()
 knn = KNeighborsClassifier()
@@ -37,8 +38,6 @@ y_train["target"] = (y_train["codtarget"]).astype(int)
 y_train = y_train.set_index("prediction_id")
 
 drop_cols = ["codmes"]
-
-
 
 def zip_stacked_classifiers(*args):
     to_zip = []
