@@ -139,7 +139,7 @@ train_temp = train_temp.drop(["codmes", "id_persona"], axis = 1)
 print(train_temp)
 train_temp = train_temp.set_index("prediction_id")
 print(train_temp)
-X_train = X_train.join(train_temp).set_index("prediction_id")
+X_train = X_train.join(train_temp)
 X_train = X_train[ X_train['codtarget'] == 1 ]
 X_train = X_train.drop(['codtarget'], axis=1)
 
