@@ -63,6 +63,8 @@ for mes in X_train.codmes.unique():
     Xv = X_train[X_train.codmes == mes]
     Xv = Xv.drop(drop_cols, axis=1)
     yv = y_train.loc[Xv.index, "target"]
+
+X_test = X_test.drop(drop_cols, axis=1)
 '''
 print(Xt)
 print(Xv)
@@ -87,6 +89,9 @@ for clf in stacked_clf_list:
     preds = ensemble.predict(X_test)
     accuracy = accuracy_score(preds, yv)
     
+    print("OALSDJOQWIJDQW")
+    print(preds)
+
     if accuracy > best_combination[0]:
         best_combination[0] = accuracy
         best_combination[1] = clf[1]
