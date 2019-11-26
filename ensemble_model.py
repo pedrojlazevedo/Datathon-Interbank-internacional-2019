@@ -34,7 +34,7 @@ train = pd.read_csv("interbank-internacional-2019/ib_base_inicial_train/ib_base_
 
 y_train = train[['codmes', 'id_persona', 'margen', 'codtarget']].copy()
 y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["codmes"].astype(str)
-y_train["target"] = (y_train["codtarget"]).astype(int)
+y_train["target"] = (y_train["margen"] > 0).astype(int)
 y_train = y_train.set_index("prediction_id")
 
 drop_cols = ["codmes"]
@@ -79,7 +79,8 @@ print(Xt)
 for clf in stacked_clf_list:
     ensemble = SuperLearner(scorer = accuracy_score, 
                             random_state = seed, 
-                            folds = 10)
+                            folds = 10,
+                            n_estimators = 100)
     ensemble.add(clf[0])
     ensemble.add_meta(lr)
     ensemble.fit(Xt, yt)
