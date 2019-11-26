@@ -20,9 +20,9 @@ lr = LogisticRegression()
 seed = 1075
 rf = RandomForestClassifier(n_estimators = 100)
 et = ExtraTreesClassifier(n_estimators = 100)
-knn = KNeighborsClassifier(n_estimators = 100)
-svc = SVC(n_estimators = 100)
-rg = RidgeClassifier(n_estimators = 100)
+knn = KNeighborsClassifier()
+svc = SVC()
+rg = RidgeClassifier()
 
 clf_array = [rf, et, knn, svc, rg]  
 names = ['Random Forest', 'Extra Trees', 'KNeighbors', 'SVC', 'Ridge Classifier']
