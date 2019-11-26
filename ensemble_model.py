@@ -86,9 +86,8 @@ for clf in stacked_clf_list:
     ensemble.add_meta(lr)
     ensemble.fit(Xt, yt)
     preds = ensemble.predict(Xv)
-    preds = ensemble.predict(X_test)
     accuracy = accuracy_score(preds, yv)
-    
+    preds = ensemble.predict(X_test)
     print("OALSDJOQWIJDQW")
     print(preds)
 
