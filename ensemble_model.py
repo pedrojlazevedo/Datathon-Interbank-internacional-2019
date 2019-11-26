@@ -42,7 +42,7 @@ drop_cols = ["codmes"]
 def zip_stacked_classifiers(*args):
     to_zip = []
     for arg in args:
-        combined_items = sum(list([map(list, combinations(arg, i)) for i in range(len(arg) + 1)], []))
+        combined_items = sum([list(map(list, combinations(arg, i))) for i in range(len(arg) + 1)], [])
         combined_items = filter(lambda x: len(x) > 0, combined_items)
         to_zip.append(combined_items)
     
