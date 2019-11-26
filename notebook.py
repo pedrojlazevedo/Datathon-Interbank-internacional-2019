@@ -1,6 +1,6 @@
 import pandas as pd
 
-SAVE = True
+SAVE = False
 
 
 X_test = pd.read_csv("interbank-internacional-2019/ib_base_inicial_test/ib_base_inicial_test.csv")

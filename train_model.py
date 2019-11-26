@@ -5,10 +5,10 @@ import pandas as pd
 import gc
 import csv
 
-X_train = pd.read_csv("train_data_clean.csv").set_index("prediction_id")
+X_train = pd.read_csv("interbank-internacional-2019/data_generation/train_data.csv").set_index("prediction_id")
 X_train = X_train.drop(['codtarget'], axis=1)
 
-X_test  = pd.read_csv("test_data_clean.csv").set_index("prediction_id")
+X_test  = pd.read_csv("interbank-internacional-2019/data_generation/test_data.csv").set_index("prediction_id")
 train = pd.read_csv("interbank-internacional-2019/ib_base_inicial_train/ib_base_inicial_train.csv")
 
 y_train = train[['codmes', 'id_persona', 'margen', 'codtarget']].copy()
