@@ -267,6 +267,8 @@ if SAVE:
 X_train['target'] = (X_train["margen"] > 0).astype("int32")
 y_train["target"] = (y_train["margen"] > 0).astype("int32")
 
+count_class_0, count_class_1 = X_train.target.value_counts()
+
 df_class_0 = X_train[X_train['target'] == 0]
 df_class_1 = X_train[X_train['target'] == 1]
 df_class_2 = y_train[y_train['target'] == 0]
