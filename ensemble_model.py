@@ -84,14 +84,18 @@ for clf in stacked_clf_list:
     ensemble.add_meta(lr)
     ensemble.fit(Xt, yt)
     preds = ensemble.predict(Xv)
+    preds = ensemble.predict(X_test)
     accuracy = accuracy_score(preds, yv)
     
     if accuracy > best_combination[0]:
         best_combination[0] = accuracy
         best_combination[1] = clf[1]
+        best_preds = preds
     
     print(f"Accuracy score: {accuracy} {clf[1]}")
     print(f"\nBest stacking model is {best_combination[1]} with accuracy of: {best_combination[0]}")# Output
+
+print(best_preds)
 
 #Accuracy score: 0.674 ['Random Forest']
 #Accuracy score: 0.663 ['Extra Trees']
