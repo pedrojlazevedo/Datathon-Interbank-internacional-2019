@@ -106,7 +106,7 @@ preds = best_preds.tolist()
 print(preds)
 X_test.reset_index()
 to_send = pd.DataFrame(
-    {'prediction_id': X_test["prediction_id"],
+    {'prediction_id': X_test["prediction_id"].tolist(),
      'class': preds
     })
 print(to_send)
