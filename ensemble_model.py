@@ -99,7 +99,7 @@ for clf in stacked_clf_list:
     
     print(f"Accuracy score: {accuracy} {clf[1]}")
     print(f"\nBest stacking model is {best_combination[1]} with accuracy of: {best_combination[0]}")# Output
-    break
+
 
 print(best_preds)
 preds = best_preds.tolist()
@@ -112,5 +112,5 @@ to_send = pd.DataFrame(
      'class': preds
     })
 print(to_send)
-to_send.set_index('prediction_id')
+to_send = to_send.set_index('prediction_id')
 to_send.to_csv("ensemble.csv", header=True)
