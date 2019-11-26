@@ -64,6 +64,16 @@ for mes in X_train.codmes.unique():
     Xv = Xv.drop(drop_cols, axis=1)
     yv = y_train.loc[Xv.index, "target"]
 
+print(Xt)
+print(Xv)
+print(yt)
+print(yv)
+
+Xt.fillna(-1)
+Xv.fillna(-1)
+yt.fillna(-1)
+yv.fillna(-1)
+
 for clf in stacked_clf_list:
     ensemble = SuperLearner(scorer = accuracy_score, 
                             random_state = seed, 
