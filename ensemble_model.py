@@ -104,6 +104,7 @@ for clf in stacked_clf_list:
 print(best_preds)
 preds = best_preds.tolist()
 print(preds)
+X_test.reset_index()
 to_send = pd.DataFrame(
     {'prediction_id': X_test["prediction_id"],
      'class': preds
