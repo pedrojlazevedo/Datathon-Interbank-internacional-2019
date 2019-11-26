@@ -133,12 +133,12 @@ X_final_test = X_test.reset_index().merge(test_entries, on=["prediction_id"]).se
 X_train = pd.read_csv("interbank-internacional-2019/data_generation/train_data.csv").set_index("prediction_id")
 
 train_temp = train[["codtarget", "codmes", "id_persona"]]
-train_temp = train_temp.reset_index()
 train_temp["prediction_id"] = train_temp["id_persona"].astype(str) + "_" + train_temp["codmes"].astype(str)
 print(train_temp)
 train_temp = train_temp.drop(["codmes", "id_persona"], axis = 1)
 print(train_temp)
 train_temp = train_temp.set_index("prediction_id")
+print(train_temp)
 X_train = X_train.join(train).set_index("prediction_id")
 X_train = X_train[ X_train['codtarget'] == 1 ]
 X_train = X_train.drop(['codtarget'], axis=1)
