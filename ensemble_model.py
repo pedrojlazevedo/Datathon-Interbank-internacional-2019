@@ -15,6 +15,14 @@ from sklearn.model_selection import train_test_split
 from itertools import combinations
 
 lr = LogisticRegression()
+
+# Create classifiers
+rf = RandomForestClassifier()
+et = ExtraTreesClassifier()
+knn = KNeighborsClassifier()
+svc = SVC()
+rg = RidgeClassifier()
+
 clf_array = [rf, et, knn, svc, rg]  
 names = ['Random Forest', 'Extra Trees', 'KNeighbors', 'SVC', 'Ridge Classifier']
 
