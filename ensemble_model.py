@@ -50,10 +50,15 @@ def zip_stacked_classifiers(*args):
     
 stacked_clf_list = zip_stacked_classifiers(clf_array, names)
 best_combination = [0.00, ""]
+
+X_train.fillna(-1)
+X_test.fillna(-1)
+y_train.fillna(-1)
+
 for mes in X_train.codmes.unique():
     Xt = X_train[X_train.codmes != mes]
-    yt = y_train.loc[Xt.index, "target"]
     Xt = Xt.drop(drop_cols, axis=1)
+    yt = y_train.loc[Xt.index, "target"]
 
     Xv = X_train[X_train.codmes == mes]
     Xv = Xv.drop(drop_cols, axis=1)
