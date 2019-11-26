@@ -90,8 +90,8 @@ for clf in stacked_clf_list:
         best_combination[0] = accuracy
         best_combination[1] = clf[1]
     
-    print("Accuracy score: {:.3f} {}").format(accuracy, clf[1])
-    print("\nBest stacking model is {} with accuracy of: {:.3f}").format(best_combination[1], best_combination[0])# Output
+    print("Accuracy score: {accuracy} {clf[1]}")
+    print("\nBest stacking model is {best_combination[1} with accuracy of: {best_combination[0]}")# Output
 
 #Accuracy score: 0.674 ['Random Forest']
 #Accuracy score: 0.663 ['Extra Trees']
