@@ -18,11 +18,11 @@ lr = LogisticRegression()
 
 # Create classifiers
 seed = 1075
-rf = RandomForestClassifier()
-et = ExtraTreesClassifier()
-knn = KNeighborsClassifier()
-svc = SVC()
-rg = RidgeClassifier()
+rf = RandomForestClassifier(n_estimators = 100)
+et = ExtraTreesClassifier(n_estimators = 100)
+knn = KNeighborsClassifier(n_estimators = 100)
+svc = SVC(n_estimators = 100)
+rg = RidgeClassifier(n_estimators = 100)
 
 clf_array = [rf, et, knn, svc, rg]  
 names = ['Random Forest', 'Extra Trees', 'KNeighbors', 'SVC', 'Ridge Classifier']
@@ -79,8 +79,7 @@ print(Xt)
 for clf in stacked_clf_list:
     ensemble = SuperLearner(scorer = accuracy_score, 
                             random_state = seed, 
-                            folds = 10,
-                            n_estimators = 100)
+                            folds = 10)
     ensemble.add(clf[0])
     ensemble.add_meta(lr)
     ensemble.fit(Xt, yt)
