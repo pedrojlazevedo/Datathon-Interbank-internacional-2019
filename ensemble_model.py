@@ -99,7 +99,7 @@ for clf in stacked_clf_list:
     
     print(f"Accuracy score: {accuracy} {clf[1]}")
     print(f"\nBest stacking model is {best_combination[1]} with accuracy of: {best_combination[0]}")# Output
-    exit()
+    break()
 
 print(best_preds)
 text = pd.DataFrame(np.concatenate([X_test["prediction_id"], best_preds], axis=1))
