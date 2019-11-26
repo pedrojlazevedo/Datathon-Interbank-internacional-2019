@@ -1,6 +1,6 @@
 import pandas as pd
 
-SAVE = False
+SAVE = True
 
 
 X_test = pd.read_csv("interbank-internacional-2019/ib_base_inicial_test/ib_base_inicial_test.csv")
@@ -18,7 +18,10 @@ y_train = train[['codmes', 'id_persona', 'margen']].copy()
 y_train["prediction_id"] = y_train["id_persona"].astype(str) + "_" + y_train["codmes"].astype(str)
 # y_train["target"] = y_train["margen"].astype("float32")
 y_train = y_train.set_index("prediction_id")
-X_train = train.drop(["codtarget", "margen"], axis=1)
+
+#X_train = train.drop(["codtarget", "margen"], axis=1)
+X_train = train.drop("margen", axis=1)
+
 X_train["prediction_id"] = X_train["id_persona"].astype(str) + "_" + X_train["codmes"].astype(str)
 del train
 
@@ -207,7 +210,7 @@ for column in X_train.columns:
         cols.append(column)
 X_train.columns = cols
 X_test.columns = cols
-
+'''
 from feature_selection import FeatureSelector
 X_train.fillna(-1)
 X_test.fillna(-1)
@@ -248,27 +251,55 @@ for col in all_to_remove:
 # Remove features within a threshold > 0.75 of missing values
 X_train.drop(all_to_remove_new, axis = 1, inplace = True)
 X_test.drop(all_to_remove_new, axis = 1, inplace = True)
-
+'''
 if SAVE:
 
     X_train.to_csv("interbank-internacional-2019/data_generation/train_data.csv", header=True)
     X_test.to_csv("interbank-internacional-2019/data_generation/test_data.csv", header=True)
 
+##############
+# UPSAMPLING #
+##############
+
+X_train['target'] = (X_train["margen"] > 0).astype("int32")
+y_train["target"] = (y_train["margen"] > 0).astype("int32")
+
+df_class_0 = X_train[X_train['target'] == 0]
+df_class_1 = X_train[X_train['target'] == 1]
+df_class_2 = y_train[y_train['target'] == 0]
+df_class_3 = y_train[y_train['target'] == 1]
+
+df_class_1_over = df_class_1.sample(count_class_0, replace=True)
+df_test_over = pd.concat([df_class_0, df_class_1_over], axis=0)
+X_train = df_test_over
+
+df_class_3_over = df_class_1.sample(count_class_2, replace=True)
+df_test_over = pd.concat([df_class_2, df_class_3_over], axis=0)
+y_train = df_test_over
+
+print('Random under-sampling:')
+print(df_test_under.target.value_counts())
+
+
+X_train.drop(["target", "margen"], axis=1)
 
 ##############
 # Train DATA #
 ##############
 
 from lightgbm import LGBMRegressor
+from imblearn.over_sampling import SMOTE
 gc.collect()
 
 drop_cols = ["codmes"]
 test_preds = []
 train_preds = []
 y_train["target"] = y_train["margen"].astype("float32")
+
 for mes in X_train.codmes.unique():
     print("*"*10, mes, "*"*10)
     Xt = X_train[X_train.codmes != mes]
+    
     yt = y_train.loc[Xt.index, "target"]
     Xt = Xt.drop(drop_cols, axis=1)
 
@@ -296,6 +327,9 @@ fi = []
 test_probs = []
 train_probs = []
 y_train["target"] = (y_train["margen"] > 0).astype("int32")
+
+smote = SMOTE(ratio='minority')
+
 for mes in X_train.codmes.unique():
     print("*"*10, mes, "*"*10)
     Xt = X_train[X_train.codmes != mes]

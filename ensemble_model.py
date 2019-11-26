@@ -13,6 +13,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from itertools import combinations
+from sklearn.utils import resample
 
 lr = LogisticRegression()
 
