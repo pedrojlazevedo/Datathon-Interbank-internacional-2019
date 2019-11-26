@@ -87,14 +87,11 @@ for clf in stacked_clf_list:
     ensemble.fit(Xt, yt)
     preds = ensemble.predict(Xv)
     accuracy = accuracy_score(preds, yv)
-    preds = ensemble.predict(X_test)
-    print("OALSDJOQWIJDQW")
-    print(preds)
-    print(type(preds))
 
     if accuracy > best_combination[0]:
         best_combination[0] = accuracy
         best_combination[1] = clf[1]
+        preds = ensemble.predict(X_test)
         best_preds = preds
     
     print(f"Accuracy score: {accuracy} {clf[1]}")
