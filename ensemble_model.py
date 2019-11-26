@@ -102,6 +102,6 @@ for clf in stacked_clf_list:
     exit()
 
 print(best_preds)
-text = pd.DataFrame(np.concatenate([X_test["prediction_id"], best_preds], axis=1)
+text = pd.DataFrame(np.concatenate([X_test["prediction_id"], best_preds], axis=1))
 
 print(text)
