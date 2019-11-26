@@ -189,7 +189,7 @@ for i, c in enumerate(X_train.columns[[not all(ord(c) < 128 for c in s) for s in
 #########################
 # SAVE DATA AND LOAD IT #
 #########################
-
+'''
 cols = []
 count = 1
 is_codmes = True
@@ -210,6 +210,9 @@ for column in X_train.columns:
         cols.append(column)
 X_train.columns = cols
 X_test.columns = cols
+'''
+#VERDE xD
+
 '''
 from feature_selection import FeatureSelector
 X_train.fillna(-1)
