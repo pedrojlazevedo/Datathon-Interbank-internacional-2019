@@ -106,7 +106,7 @@ del test_probs, train_probs
 # Split Information! Train for the margen
 #
 
-X_test  = pd.read_csv("test_data_clean.csv").set_index("prediction_id")
+X_test  = pd.read_csv("interbank-internacional-2019/data_generation/test_data.csv").set_index("prediction_id")
 
 y_train = train[['codmes', 'id_persona', 'margen', 'codtarget']].copy()
 y_train = y_train[ y_train['codtarget'] == 1 ]
