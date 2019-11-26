@@ -90,6 +90,7 @@ for clf in stacked_clf_list:
     preds = ensemble.predict(X_test)
     print("OALSDJOQWIJDQW")
     print(preds)
+    print(type(preds))
 
     if accuracy > best_combination[0]:
         best_combination[0] = accuracy
