@@ -130,7 +130,7 @@ X_final_test = X_test.reset_index().merge(test_entries, on=["prediction_id"]).se
 # Train for positive margin
 #
 
-X_train = pd.read_csv("train_data_clean.csv").set_index("prediction_id")
+X_train = pd.read_csv("interbank-internacional-2019/data_generation/train_data.csv").set_index("prediction_id")
 
 X_train = X_train[ X_train['codtarget'] == 1 ]
 X_train = X_train.drop(['codtarget'], axis=1)
